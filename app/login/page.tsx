@@ -1,13 +1,28 @@
+// app/login/page.tsx
 'use client';
 
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  // 이미 로그인된 상태면 바로 /dashboard 로
+  useEffect(() => {
+    if (session) router.replace('/dashboard');
+  }, [session, router]);
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <button className="px-4 py-2 bg-black text-white rounded" onClick={() => signIn('github')}>
-        Sign in with GitHub
-      </button>
-    </div>
+    <button
+      onClick={() =>
+        signIn('github', {
+          callbackUrl: '/dashboard', // ← 로그인 성공 후 이 경로로
+        })
+      }
+    >
+      Sign in with GitHub
+    </button>
   );
 }
