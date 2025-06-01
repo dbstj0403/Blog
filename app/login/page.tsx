@@ -95,6 +95,12 @@ export default function LoginPage() {
       >
         Github 계정으로 로그인
       </button>
+      <p
+        className='text-sm text-gray-500 underline text-center cursor-pointer'
+        onClick={() => router.push('/signup')}
+      >
+        회원가입
+      </p>
     </div>
   );
 }
