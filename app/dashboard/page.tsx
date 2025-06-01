@@ -38,18 +38,18 @@ export default function DashboardPage() {
   if (!session) return null;
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">환영합니다, {session.user.email}님!</h1>
+    <div className='p-6 space-y-6'>
+      <h1 className='text-2xl font-bold'>환영합니다, {session.user.email}님!</h1>
 
-      <div className="space-x-4">
+      <div className='space-x-4'>
         <button
           onClick={() => signOut({ callbackUrl: '/login' })}
-          className="px-4 py-2 bg-gray-600 text-white rounded"
+          className='px-4 py-2 bg-gray-600 text-white rounded'
         >
           로그아웃
         </button>
 
-        <button onClick={handleDeleteAccount} className="px-4 py-2 bg-red-600 text-white rounded">
+        <button onClick={handleDeleteAccount} className='px-4 py-2 bg-red-600 text-white rounded'>
           회원 탈퇴
         </button>
       </div>

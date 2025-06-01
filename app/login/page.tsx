@@ -42,38 +42,38 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-bold text-center">로그인</h1>
+    <div className='max-w-md mx-auto p-6 space-y-6'>
+      <h1 className='text-2xl font-bold text-center'>로그인</h1>
 
-      <form onSubmit={handleCredentialsLogin} className="space-y-4">
-        {error && <p className="text-red-600">{error}</p>}
+      <form onSubmit={handleCredentialsLogin} className='space-y-4'>
+        {error && <p className='text-red-600'>{error}</p>}
 
         <div>
-          <label className="block mb-1">이메일</label>
+          <label className='block mb-1'>이메일</label>
           <input
-            type="email"
+            type='email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full p-2 border rounded"
+            className='w-full p-2 border rounded'
           />
         </div>
 
         <div>
-          <label className="block mb-1">비밀번호</label>
+          <label className='block mb-1'>비밀번호</label>
           <input
-            type="password"
+            type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full p-2 border rounded"
+            className='w-full p-2 border rounded'
           />
         </div>
 
         <button
-          type="submit"
+          type='submit'
           disabled={loading}
-          className="w-full py-2 bg-blue-600 text-white rounded"
+          className='w-full py-2 bg-blue-600 text-white rounded'
         >
           {loading ? '로그인 중…' : '로그인'}
         </button>
@@ -87,7 +87,7 @@ export default function LoginPage() {
             callbackUrl: `${window.location.origin}/dashboard`,
           })
         }
-        className="w-full py-2 bg-gray-800 text-white rounded"
+        className='w-full py-2 bg-gray-800 text-white rounded'
       >
         Sign in with GitHub
       </button>

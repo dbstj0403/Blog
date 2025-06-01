@@ -65,26 +65,26 @@ export default function ConfirmLinkPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">이미 로컬 계정이 있습니다</h1>
-      <p className="mb-6">
+    <div className='max-w-md mx-auto p-6'>
+      <h1 className='text-2xl font-bold mb-4'>이미 로컬 계정이 있습니다</h1>
+      <p className='mb-6'>
         이 이메일로 이미 가입된 로컬 계정이 있어요.
         <br />
         GitHub 계정을 이 로컬 계정에 연결하시겠습니까?
       </p>
 
-      {error && <p className="text-red-600 mb-4">{error}</p>}
+      {error && <p className='text-red-600 mb-4'>{error}</p>}
 
-      <div className="flex space-x-2">
+      <div className='flex space-x-2'>
         <button
-          className="px-4 py-2 bg-green-600 text-white rounded"
+          className='px-4 py-2 bg-green-600 text-white rounded'
           onClick={handleLink}
           disabled={loading}
         >
           {loading ? '연결 중…' : '네, 연결할게요'}
         </button>
         <button
-          className="px-4 py-2 bg-gray-300 rounded"
+          className='px-4 py-2 bg-gray-300 rounded'
           onClick={() => router.push('/login')}
           disabled={loading}
         >

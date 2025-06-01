@@ -47,48 +47,48 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">회원가입</h1>
-      {error && <p className="text-red-600 mb-4">{error}</p>}
+    <div className='max-w-md mx-auto p-6'>
+      <h1 className='text-2xl font-bold mb-4'>회원가입</h1>
+      {error && <p className='text-red-600 mb-4'>{error}</p>}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className='space-y-4'>
         <div>
-          <label className="block mb-1">이름</label>
+          <label className='block mb-1'>이름</label>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="w-full p-2 border rounded"
+            className='w-full p-2 border rounded'
           />
         </div>
 
         <div>
-          <label className="block mb-1">이메일</label>
+          <label className='block mb-1'>이메일</label>
           <input
-            type="email"
+            type='email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full p-2 border rounded"
+            className='w-full p-2 border rounded'
           />
         </div>
 
         <div>
-          <label className="block mb-1">비밀번호</label>
+          <label className='block mb-1'>비밀번호</label>
           <input
-            type="password"
+            type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={8}
-            className="w-full p-2 border rounded"
+            className='w-full p-2 border rounded'
           />
         </div>
 
         <button
-          type="submit"
+          type='submit'
           disabled={loading}
-          className="w-full py-2 bg-blue-600 text-white rounded"
+          className='w-full py-2 bg-blue-600 text-white rounded'
         >
           {loading ? '가입 중…' : '회원가입'}
         </button>
