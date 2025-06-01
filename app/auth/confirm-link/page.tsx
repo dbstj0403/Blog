@@ -41,7 +41,7 @@ export default function ConfirmLinkPage() {
       // 계정이 연결되었으니, GitHub OAuth 로그인 플로우를 재시작합니다.
       // callbackUrl을 /dashboard로 지정하면,
       // 바로 대시보드 세션이 발급된 뒤 이동합니다.
-      await signIn('github', { callbackUrl: '/dashboard' });
+      await signIn('github', { callbackUrl: '/' });
     } catch (err: any) {
       setError(err.message);
       setLoading(false);

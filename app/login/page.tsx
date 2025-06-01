@@ -12,7 +12,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (status === 'authenticated') {
-      router.replace('/dashboard');
+      router.replace('/');
     }
   }, [status, router]);
 
@@ -30,7 +30,7 @@ export default function LoginPage() {
       redirect: false,
       email,
       password,
-      callbackUrl: '/dashboard',
+      callbackUrl: '/',
     });
 
     if (res?.ok && res.url) {
@@ -88,7 +88,7 @@ export default function LoginPage() {
       <button
         onClick={() =>
           signIn('github', {
-            callbackUrl: `${window.location.origin}/dashboard`,
+            callbackUrl: `${window.location.origin}`,
           })
         }
         className='w-full py-3 bg-gray-800 text-white rounded-lg cursor-pointer'

@@ -81,7 +81,7 @@ export const authOptions: NextAuthOptions = {
     },
 
     async redirect({ baseUrl }) {
-      return `${baseUrl}/dashboard`;
+      return `${baseUrl}/`;
     },
   },
 

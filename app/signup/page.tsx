@@ -36,7 +36,7 @@ export default function SignUpPage() {
       const proceed = window.confirm(body.message);
       if (proceed) {
         await signIn('github', {
-          callbackUrl: '/dashboard',
+          callbackUrl: '/',
           authorizationParams: { login: ' ' },
         });
       }
