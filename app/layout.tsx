@@ -1,6 +1,7 @@
 import React from 'react';
 import './globals.css';
 import Providers from './providers';
+import Header from '@/components/Header';
 
 export const metadata = {
   title: 'Digital Hanaro Tech Blog',
@@ -17,7 +18,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <Header />
+          {children}
+        </Providers>
       </body>
     </html>
   );

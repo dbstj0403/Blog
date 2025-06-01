@@ -1,27 +1,46 @@
+// src/components/ui/button.tsx
+'use client';
+
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
+/**
+ * buttonVariants: 다양한 버튼 variant와 size에 따른 Tailwind 클래스 정의
+ * - 기본적으로 font-medium이 적용되지만, login/signup variant만
+ *   sm 이상에서 크게, 모바일에서는 훨씬 작게 설정
+ */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+        // 기본 variant (font-medium)
+        default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 font-medium',
         destructive:
-          'bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
+          'bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 font-medium',
         outline:
-          'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
-        secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
-        link: 'text-primary underline-offset-4 hover:underline',
-        login:
-          'bg-[var(--hana-green)] text-white px-6 py-1.5 text-sm rounded-md hover:bg-[var(--hana-green-80)] focus-visible:ring-0 shadow-none',
+          'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 font-medium',
+        secondary:
+          'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80 font-medium',
+        ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 font-medium',
+        link: 'text-primary underline-offset-4 hover:underline font-medium',
 
+        // ── Login variant: 모바일 매우 작게(px-2 py-0.5 text-[10px]), sm 이상(px-6 py-1 text-sm) ──
+        login:
+          'bg-[var(--hana-green)] text-white ' +
+          'px-2 py-0.5 text-[10px] ' + // 모바일 기본 (더 작게)
+          'sm:px-6 sm:py-1 sm:text-sm ' + // sm 이상 (기존처럼)
+          'rounded-md hover:bg-[var(--hana-green-80)] focus-visible:ring-0 shadow-none font-normal',
+
+        // ── Signup variant: 모바일 매우 작게(px-2 py-0.5 text-[10px]), sm 이상(px-6 py-1 text-sm) ──
         signup:
-          'bg-[#f2f4f6] text-[#3b3b3b] px-6 py-1.5 text-sm rounded-md hover:bg-[#e4e6e8] focus-visible:ring-0 shadow-none',
+          'bg-[#f2f4f6] text-[#3b3b3b] ' +
+          'px-2 py-0.5 text-[10px] ' + // 모바일 기본 (더 작게)
+          'sm:px-6 sm:py-1 sm:text-sm ' + // sm 이상 (기존처럼)
+          'rounded-md hover:bg-[#e4e6e8] focus-visible:ring-0 shadow-none font-normal',
       },
       size: {
         default: 'h-9 px-3 py-2 text-xs sm:text-base has-[>svg]:px-3',
@@ -37,16 +56,13 @@ const buttonVariants = cva(
   },
 );
 
-function Button({
-  className,
-  variant,
-  size,
-  asChild = false,
-  ...props
-}: React.ComponentProps<'button'> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
-  }) {
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+
+function Button({ className, variant, size, asChild = false, ...props }: ButtonProps) {
   const Comp = asChild ? Slot : 'button';
 
   return (
