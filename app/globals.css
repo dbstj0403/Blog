@@ -4,21 +4,17 @@
 @custom-variant dark (&:is(.dark *));
 
 html {
-  font-family:
-    'Pretendard',
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    'Noto Sans',
-    sans-serif,
-    'Apple Color Emoji',
-    'Segoe UI Emoji',
-    'Segoe UI Symbol',
-    'Noto Color Emoji';
+  font-family: 'Pretendard', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+@theme {
+  --color-hana-green: #008485;
+  --color-hana-green-80: rgba(0, 132, 133, 0.8);
+  --color-hana-green-60: rgba(0, 132, 133, 0.6);
+  --colorhana-green-40: rgba(0, 132, 133, 0.4);
+  --color-hana-green-20: rgba(0, 132, 133, 0.2);
 }
 
 @theme inline {

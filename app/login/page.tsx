@@ -1,15 +1,15 @@
-// app/login/page.tsx
 'use client';
 
 import { signIn, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import logo from '@/assets/icons/logoIcon.png';
+import Image from 'next/image';
 
 export default function LoginPage() {
   const { status } = useSession();
   const router = useRouter();
 
-  // 이미 로그인된 상태면 /dashboard로
   useEffect(() => {
     if (status === 'authenticated') {
       router.replace('/dashboard');
@@ -42,40 +42,44 @@ export default function LoginPage() {
   }
 
   return (
-    <div className='max-w-md mx-auto p-6 space-y-6'>
-      <h1 className='text-2xl font-bold text-center'>로그인</h1>
+    <div className='max-w-md mx-auto p-6 space-y-6 pt-16 mt-10'>
+      <div className='flex gap-2 items-center'>
+        <Image src={logo} alt='logo' className='w-12 h-12' />
+        <p className='font-semibold text-sm'>Digital Hanaro Tech</p>
+      </div>
+      <p className='text-2xl font-semibold text-gray-600'>로그인</p>
 
-      <form onSubmit={handleCredentialsLogin} className='space-y-4'>
-        {error && <p className='text-red-600'>{error}</p>}
-
+      <form onSubmit={handleCredentialsLogin} className='space-y-8'>
         <div>
-          <label className='block mb-1'>이메일</label>
+          <label className='block mb-1 text-sm text-gray-500'>이메일 주소</label>
           <input
             type='email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className='w-full p-2 border rounded'
+            className='w-full p-2 border rounded-lg'
           />
         </div>
 
         <div>
-          <label className='block mb-1'>비밀번호</label>
+          <label className='block mb-1 text-sm text-gray-500'>비밀번호</label>
           <input
             type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className='w-full p-2 border rounded'
+            className='w-full p-2 border rounded-lg'
           />
         </div>
+
+        {error && <p className='text-red-600 text-xs'>{error}</p>}
 
         <button
           type='submit'
           disabled={loading}
-          className='w-full py-2 bg-blue-600 text-white rounded'
+          className='w-full py-3 bg-hana-green text-white rounded-lg cursor-pointer'
         >
-          {loading ? '로그인 중…' : '로그인'}
+          로그인
         </button>
       </form>
 
@@ -87,9 +91,9 @@ export default function LoginPage() {
             callbackUrl: `${window.location.origin}/dashboard`,
           })
         }
-        className='w-full py-2 bg-gray-800 text-white rounded'
+        className='w-full py-3 bg-gray-800 text-white rounded-lg cursor-pointer'
       >
-        Sign in with GitHub
+        Github 계정으로 로그인
       </button>
     </div>
   );
