@@ -32,7 +32,7 @@ export default function Posts() {
   return (
     <Tabs
       defaultValue='all'
-      className='w-full pl-10'
+      className='w-full sm:pl-10'
       onValueChange={(value) => setSelectedTab(value)}
     >
       <TabsList>
@@ -44,7 +44,7 @@ export default function Posts() {
             }}
             value={cat.value}
           >
-            {cat.label}
+            <p className='cursor-pointer'>{cat.label}</p>
           </TabsTrigger>
         ))}
 
@@ -58,8 +58,8 @@ export default function Posts() {
       </TabsList>
 
       {CATEGORY_LIST.map((cat) => (
-        <TabsContent key={cat.value} value={cat.value} className='pt-6 pl-5'>
-          <div className='space-y-8'>
+        <TabsContent key={cat.value} value={cat.value} className='pt-6 sm:pl-5'>
+          <div className='space-y-8 cursor-pointer'>
             <Post />
             <Post />
             <Post />
