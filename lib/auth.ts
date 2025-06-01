@@ -1,62 +1,41 @@
 // lib/auth.ts
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import type { Adapter, AdapterUser, Account as NextAuthAccount } from 'next-auth/adapters';
-import type { NextAuthOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import GitHubProvider from 'next-auth/providers/github';
+import { compare } from 'bcrypt';
+import type { NextAuthOptions } from 'next-auth';
 import { prisma } from './prismaClient';
 
-const defaultAdapter = PrismaAdapter(prisma);
-
-const CustomAdapter = (): Adapter => ({
-  ...defaultAdapter,
-
-  // 최초 OAuth 로그인 시 한 번만 호출됩니다.
-  async createUser(user: Omit<AdapterUser, 'id'>) {
-    // 1) DB에 user_id PK로 레코드 생성
-    const dbUser = await prisma.user.create({
-      data: {
-        email: user.email!,
-        nickname: user.name ?? undefined,
-        provider: 'github',
-      },
-    });
-    // 2) NextAuth가 기대하는 AdapterUser 형태로 반환
-    return {
-      id: dbUser.user_id, // <--- user_id를 id로 매핑
-      name: dbUser.nickname ?? null,
-      email: dbUser.email!,
-      emailVerified: null, // OAuth는 null 혹은 Date 사용
-      image: null,
-    };
-  },
-
-  // createUser 후 계정 연결 시 호출됩니다.
-  async linkAccount(account: NextAuthAccount) {
-    return prisma.account.create({
-      data: {
-        provider: account.provider,
-        type: account.type,
-        providerAccountId: account.providerAccountId,
-        refresh_token: account.refresh_token,
-        access_token: account.access_token,
-        expires_at: account.expires_at,
-        token_type: account.token_type,
-        scope: account.scope,
-        id_token: account.id_token,
-        session_state: account.session_state,
-        // 여기 userId 대신, account.userId 에 들어온 id (즉 user_id)를 써서 연결
-        user: {
-          connect: { user_id: account.userId! },
-        },
-      },
-    });
-  },
-});
-
 export const authOptions: NextAuthOptions = {
-  adapter: CustomAdapter(),
+  adapter: PrismaAdapter(prisma),
 
   providers: [
+    CredentialsProvider({
+      name: 'Email',
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(creds) {
+        if (!creds?.email || !creds.password) return null;
+
+        const user = await prisma.user.findUnique({
+          where: { email: creds.email },
+        });
+        if (!user?.password) return null;
+
+        const ok = await compare(creds.password, user.password);
+        if (!ok) return null;
+
+        return {
+          id: user.id.toString(),
+          email: user.email,
+          name: user.name ?? user.email,
+          image: user.image ?? null,
+        };
+      },
+    }),
+
     GitHubProvider({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
@@ -64,22 +43,48 @@ export const authOptions: NextAuthOptions = {
   ],
 
   session: {
-    strategy: 'database',
+    strategy: 'jwt',
   },
 
   callbacks: {
-    async session({ session, user }) {
-      // user.id는 내부에서 user_id로부터 매핑된 값입니다.
-      session.user.id = user.id;
-      session.user.name = user.name; // nickname이 들어갑니다
+    async session({ session, token }) {
+      if (token?.sub) session.user.id = token.sub;
+      if (token?.email) session.user.email = token.email as string;
+      if (token?.name) session.user.name = token.name as string;
       return session;
     },
-    async redirect({ url, baseUrl }) {
-      if (url.startsWith(baseUrl)) return url;
-      return baseUrl;
+
+    async signIn({ user, account }) {
+      if (account?.provider === 'github') {
+        const linked = await prisma.account.findUnique({
+          where: {
+            provider_providerAccountId: {
+              provider: account.provider,
+              providerAccountId: account.providerAccountId,
+            },
+          },
+        });
+        if (linked) return true;
+
+        const existing = await prisma.user.findUnique({
+          where: { email: user.email! },
+        });
+        if (existing) {
+          return (
+            `/auth/confirm-link?userId=${existing.id}` +
+            `&providerId=${account.provider}` +
+            `&providerAccountId=${account.providerAccountId}`
+          );
+        }
+      }
+      return true;
+    },
+
+    async redirect({ baseUrl }) {
+      return `${baseUrl}/dashboard`;
     },
   },
 
-  debug: process.env.NODE_ENV === 'development',
   secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === 'development',
 };
