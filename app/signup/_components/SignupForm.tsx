@@ -76,7 +76,13 @@ const SignupForm = () => {
           </button>
 
           <p className='text-gray-500 text-xs text-center'>
-            이미 계정이 있으신가요? <span className='underline cursor-pointer'>로그인</span>
+            이미 계정이 있으신가요?{' '}
+            <span
+              className='underline cursor-pointer'
+              onClick={() => window.location.replace('/login')}
+            >
+              로그인
+            </span>
           </p>
         </form>
       </div>

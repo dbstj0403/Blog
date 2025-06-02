@@ -3,7 +3,7 @@
 import logo from '@/assets/icons/logoIcon.png';
 import Image from 'next/image';
 import useLogin from '@/hooks/login/useLogin';
-import ConfirmLinkModal from '@/components/common/ConfirmModal';
+import ConfirmLinkModal from '@/app/auth/confirm-link/_components/ConfirmModal';
 
 const LoginForm = () => {
   const {
