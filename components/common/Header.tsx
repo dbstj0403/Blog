@@ -7,12 +7,11 @@ import editIcon from '@/assets/icons/editIcon.svg';
 import Image from 'next/image';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
-import { useUser } from '@/app/context/UserContext';
 import { useSession } from 'next-auth/react';
 
 const Header = () => {
   const router = useRouter();
-  const { user } = useUser();
+
   const { data: session, status } = useSession();
 
   if (status === 'loading') {
@@ -51,7 +50,7 @@ const Header = () => {
 
         {status === 'authenticated' && (
           <>
-            {user?.role === 'ADMIN' && (
+            {session.user.role === 'ADMIN' && (
               <div
                 className='flex gap-2 bg-gray-800 text-white items-center rounded-lg px-2 py-1.5 cursor-pointer'
                 onClick={() => router.push('/write')}

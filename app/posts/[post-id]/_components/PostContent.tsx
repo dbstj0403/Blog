@@ -12,8 +12,6 @@ import thumbsdown from '@/assets/icons/thumbsdownIcon.svg';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
-import { useUser } from '@/app/context/UserContext';
-
 interface Author {
   id: number;
   name: string | null;
@@ -39,9 +37,9 @@ interface PostContentProps {
 }
 
 export default function PostContent({ post }: PostContentProps) {
-  const { data: session } = useSession();
   const isLoggedIn = !!session?.user;
-  const { user } = useUser();
+
+  const { data: session } = useSession();
   const {
     id,
     title,
@@ -183,7 +181,7 @@ export default function PostContent({ post }: PostContentProps) {
             ) : (
               <p className='font-bold text-3xl'>{title}</p>
             )}
-            {user?.role === 'ADMIN' && (
+            {session?.user?.role === 'ADMIN' && (
               <div className='flex justify-end gap-2'>
                 {editMode ? (
                   <>

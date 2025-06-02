@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useUser } from '@/app/context/UserContext';
+
 import { useSession } from 'next-auth/react';
 import profileIcon from '@/assets/icons/profileIcon.svg';
 import { signOut } from 'next-auth/react';
@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 
 const ProfileContent = ({ user }: { user: any }) => {
   const router = useRouter();
-  // const { user } = useUser();
+
   const { update, data: session } = useSession();
   const [userName, setUserName] = useState(user?.name ?? '');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
