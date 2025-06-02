@@ -56,7 +56,7 @@ const WriteForm = () => {
         <label className='block mb-2 font-medium text-gray-800'>카테고리</label>
         <Input
           type='text'
-          placeholder='카테고리를 입력하세요 (예: React)'
+          placeholder='카테고리를 공백으로 구분하여 입력하세요'
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         />

@@ -37,9 +37,8 @@ interface PostContentProps {
 }
 
 export default function PostContent({ post }: PostContentProps) {
-  const isLoggedIn = !!session?.user;
-
   const { data: session } = useSession();
+  const isLoggedIn = !!session?.user;
   const {
     id,
     title,

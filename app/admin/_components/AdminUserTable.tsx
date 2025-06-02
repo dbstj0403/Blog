@@ -3,8 +3,10 @@
 import { useEffect, useState } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import { Card } from '@/components/ui/card';
+import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import convertDateFormat from '@/utils/convertDateFormat';
+import searchIcon from '@/assets/icons/searchIcon.svg';
 import {
   Table,
   TableBody,
@@ -40,7 +42,6 @@ export default function AdminUserTable() {
       const isSelf = session?.user?.id === selectedUserId.toString();
       setShowDeleteModal(false);
       setSelectedUserId(null);
-      console.log('isSelf', isSelf);
       if (isSelf) {
         alert('본인 계정이 삭제되어 로그아웃됩니다.');
         await signOut({ callbackUrl: '/' }); // 자동 로그아웃 후 메인으로
@@ -63,7 +64,8 @@ export default function AdminUserTable() {
 
   return (
     <Card className='p-6 shadow-sm mt-6'>
-      <div className='flex justify-end mb-4'>
+      <div className='flex justify-end mb-4 items-center gap-3'>
+        <Image src={searchIcon} alt='search' className='w-5 h-5' />
         <Input
           type='text'
           placeholder='닉네임 또는 이메일 검색'

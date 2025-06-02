@@ -17,30 +17,37 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: '제목과 카테고리는 필수입니다.' }, { status: 400 });
   }
 
-  // ✅ 1. 카테고리 존재 여부 확인
-  let existingCategory = await prisma.category.findUnique({
-    where: { category_name: category },
-  });
+  // ✅ 카테고리 문자열 → 배열로 분리 (공백 기준)
+  const categoryList = category
+    .split(/\s+/) // 공백 1개 이상 기준 분할
+    .map((c: string) => c.trim())
+    .filter((c: string) => c.length > 0);
 
-  // ✅ 2. 없다면 새로 생성
-  if (!existingCategory) {
-    existingCategory = await prisma.category.create({
-      data: { category_name: category },
+  const connectedCategories = [];
+
+  for (const cat of categoryList) {
+    let existing = await prisma.category.findUnique({
+      where: { category_name: cat },
+    });
+
+    if (!existing) {
+      existing = await prisma.category.create({
+        data: { category_name: cat },
+      });
+    }
+
+    connectedCategories.push({
+      category: { connect: { id: existing.id } },
     });
   }
 
-  // ✅ 3. 포스트 생성 + 카테고리 연결
   const newPost = await prisma.post.create({
     data: {
       title,
       content,
-      author: { connect: { id: Number(user.id) } }, // ← 여기 수정됨!
+      author: { connect: { id: Number(user.id) } },
       categories: {
-        create: [
-          {
-            category: { connect: { id: existingCategory.id } },
-          },
-        ],
+        create: connectedCategories,
       },
     },
   });

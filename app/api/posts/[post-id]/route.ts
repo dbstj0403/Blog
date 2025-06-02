@@ -38,7 +38,7 @@ export async function DELETE(req: Request, { params }: { params: { 'post-id': st
 export async function PATCH(req: Request, { params }: { params: { 'post-id': string } }) {
   const session = await getServerSession(authOptions);
   const userId = Number(session?.user?.id);
-  const { ['post-id']: raw } = await params; // <- 여기!
+  const { ['post-id']: raw } = await params;
   const postId = Number(raw);
 
   if (!userId || isNaN(postId)) {
