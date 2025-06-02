@@ -1,25 +1,40 @@
+// components/post/Posts.tsx
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import Post from './BestPostItem';
 
+// ① created_at, modified_at를 Date로 선언
 interface Category {
   id: number;
   category_name: string;
 }
 
-interface PostsProps {
-  categories: Category[];
+interface PostWithAuthor {
+  id: number;
+  title: string;
+  content: string | null;
+  like_count: number;
+  dislike_count: number;
+  created_at: Date; // Server에서 Date로 내려오는 형태
+  modified_at: Date;
+  author: {
+    id: number;
+    name: string | null;
+    image: string | null;
+  };
 }
 
-export default function Posts({ categories }: PostsProps) {
+interface PostsProps {
+  categories: Category[];
+  postsByCategory: Record<string, PostWithAuthor[]>;
+}
+
+export default function Posts({ categories, postsByCategory }: PostsProps) {
   const [selectedTab, setSelectedTab] = useState('all');
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const [indicatorStyle, setIndicatorStyle] = useState({
-    left: 0,
-    width: 0,
-  });
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
   const CATEGORY_LIST = [
     { value: 'all', label: '전체' },
@@ -45,6 +60,7 @@ export default function Posts({ categories }: PostsProps) {
       className='w-full sm:pl-10'
       onValueChange={(value) => setSelectedTab(value)}
     >
+      {/* ─── 탭 리스트 ─── */}
       <TabsList>
         {CATEGORY_LIST.map((cat) => (
           <TabsTrigger
@@ -70,9 +86,11 @@ export default function Posts({ categories }: PostsProps) {
       {CATEGORY_LIST.map((cat) => (
         <TabsContent key={cat.value} value={cat.value} className='pt-6 sm:pl-5'>
           <div className='space-y-8 cursor-pointer'>
-            <Post />
-            <Post />
-            <Post />
+            {postsByCategory[cat.value]?.length > 0 ? (
+              postsByCategory[cat.value].map((post) => <Post key={post.id} post={post} />)
+            ) : (
+              <p className='text-gray-500'>해당 카테고리에 게시물이 없습니다.</p>
+            )}
           </div>
         </TabsContent>
       ))}
