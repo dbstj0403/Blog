@@ -69,7 +69,7 @@ const ProfileContent = ({ user }: { user: any }) => {
         <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
           <div className='border rounded-xl p-5 hover:shadow transition cursor-pointer'>
             <p className='font-medium text-gray-800'>좋아요 누른 글</p>
-            <p className='text-sm text-gray-500 mt-1'>관심 있는 게시글 목록이에요.</p>
+            <p className='text-sm text-gray-500 mt-1'>관심 있는 포스트 목록이에요.</p>
           </div>
 
           <div
@@ -77,7 +77,7 @@ const ProfileContent = ({ user }: { user: any }) => {
             onClick={() => setShowEditModal(true)}
           >
             <p className='font-medium text-gray-800'>내 정보 수정</p>
-            <p className='text-sm text-gray-500 mt-1'>프로필 닉네임을 변경할 수 있어요.</p>
+            <p className='text-sm text-gray-500 mt-1'>프로필 이름을 변경할 수 있어요.</p>
           </div>
 
           <EditProfileModal
