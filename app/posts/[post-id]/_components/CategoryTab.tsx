@@ -19,7 +19,7 @@ const CategoryTab = ({ categories, currentCategory }: CategoryTabProps) => {
   return (
     <div className='w-full bg-black text-gray-300 px-8 pt-16 mt-10 min-h-screen space-y-6'>
       <div>
-        <h2 className='text-white text-lg font-semibold mb-3'>분류 전체보기 ({totalCount})</h2>
+        <h2 className='text-white text-lg font-semibold mb-3'>전체보기 ({totalCount})</h2>
         <ul className='space-y-2'>
           {categories.map((cat) => (
             <li key={cat.category_name}>
