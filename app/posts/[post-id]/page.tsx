@@ -1,5 +1,11 @@
+import PostContent from './_components/PostContent';
+
 const PostPage = () => {
-  return <></>;
+  return (
+    <>
+      <PostContent />
+    </>
+  );
 };
 
 export default PostPage;

@@ -1,7 +1,12 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+
 const Post = () => {
+  const router = useRouter();
   return (
     <>
-      <div className='flex flex-col'>
+      <div className='flex flex-col' onClick={() => router.push('/posts/1')}>
         <p className='font-semibold text-lg mb-1'>
           토스는 어떻게 광고를 보여줄까? 토스애즈 ML 톺아보기
         </p>
