@@ -77,7 +77,7 @@ const ProfileContent = ({ user }: { user: any }) => {
             onClick={() => setShowEditModal(true)}
           >
             <p className='font-medium text-gray-800'>내 정보 수정</p>
-            <p className='text-sm text-gray-500 mt-1'>프로필 이름을 변경할 수 있어요.</p>
+            <p className='text-sm text-gray-500 mt-1'>프로필 닉네임을 변경할 수 있어요.</p>
           </div>
 
           <EditProfileModal
@@ -85,9 +85,9 @@ const ProfileContent = ({ user }: { user: any }) => {
             isOpen={showEditModal}
             onClose={() => setShowEditModal(false)}
             onSuccess={async (newName: string) => {
-              setUserName(newName); // 로컬 상태 반영
+              setUserName(newName);
               setShowEditModal(false);
-              await update(); // ✅ 세션 갱신
+              await update();
               window.location.reload();
             }}
           />

@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { signOut, useSession } from 'next-auth/react';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import convertDateFormat from '@/utils/convertDateFormat';
 import {
   Table,
   TableBody,
@@ -15,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import Modal from '@/components/common/Modal';
 
 export default function AdminUserTable() {
+  const { data: session } = useSession();
   const [users, setUsers] = useState<any[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -34,9 +37,16 @@ export default function AdminUserTable() {
     });
 
     if (res.ok) {
+      const isSelf = session?.user?.id === selectedUserId.toString();
       setShowDeleteModal(false);
       setSelectedUserId(null);
-      fetchUsers();
+      console.log('isSelf', isSelf);
+      if (isSelf) {
+        alert('본인 계정이 삭제되어 로그아웃됩니다.');
+        await signOut({ callbackUrl: '/' }); // 자동 로그아웃 후 메인으로
+      } else {
+        fetchUsers(); // 목록 다시 불러오기
+      }
     } else {
       const data = await res.json();
       alert(data.message || '삭제에 실패했습니다.');
@@ -56,7 +66,7 @@ export default function AdminUserTable() {
       <div className='flex justify-end mb-4'>
         <Input
           type='text'
-          placeholder='이름 또는 이메일 검색'
+          placeholder='닉네임 또는 이메일 검색'
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className='w-full sm:w-64'
@@ -68,7 +78,7 @@ export default function AdminUserTable() {
           <TableHeader>
             <TableRow>
               <TableHead className='px-4 py-2'>ID</TableHead>
-              <TableHead className='px-4 py-2'>이름</TableHead>
+              <TableHead className='px-4 py-2'>닉네임</TableHead>
               <TableHead className='px-4 py-2'>이메일</TableHead>
               <TableHead className='px-4 py-2'>권한</TableHead>
               <TableHead className='px-4 py-2'>가입경로</TableHead>
@@ -91,7 +101,7 @@ export default function AdminUserTable() {
                   {u.provider === 'github' ? 'GitHub' : 'Email'}
                 </TableCell>
                 <TableCell className='px-4 py-2 text-sm'>
-                  {new Date(u.created_at).toLocaleDateString()}
+                  {convertDateFormat(u.created_at)}
                 </TableCell>
                 <TableCell className='px-2 py-2 text-sm'>
                   <Button
