@@ -7,6 +7,111 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  email         String?        @unique
+  password      String?
+  name          String?
+  provider      Provider       @default(LOCAL)
+  role          Role           @default(USER)
+  created_at    DateTime       @default(now())
+  emailVerified DateTime?
+  id            Int            @id @default(autoincrement())
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  reactions     PostReaction[]
+  posts         Post[]         @relation("UserToPost")
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId], map: "Account_userId_fkey")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "Session_userId_fkey")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Post {
+  id            Int            @id @default(autoincrement()) @map("post_id")
+  authorId      Int            @map("author_id")
+  title         String         @map("title")
+  content       String?        @map("content") @db.Text
+  like_count    Int            @default(0) @map("like_count")
+  dislike_count Int            @default(0) @map("dislike_count")
+  created_at    DateTime       @default(now()) @map("created_at")
+  modified_at   DateTime       @updatedAt @map("modified_at")
+  categories    PostCategory[]
+  reactions     PostReaction[]
+  author User @relation("UserToPost", fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([authorId], map: "posts_author_id_fkey")
+  @@map("posts")
+}
+
+model Category {
+  id            Int            @id @default(autoincrement()) @map("category_id")
+  category_name String         @map("category_name")
+  posts         PostCategory[]
+
+  @@map("categories")
+}
+
+model PostCategory {
+  postId     Int      @map("post_id")
+  categoryId Int      @map("category_id")
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([postId, categoryId])
+  @@index([categoryId], map: "post_categories_category_id_fkey")
+  @@map("post_categories")
+}
+
+model PostReaction {
+  id         Int          @id @default(autoincrement()) @map("reaction_id")
+  userId     Int          @map("user_id2")
+  postId     Int          @map("post_id2")
+  type       ReactionType
+  created_at DateTime     @default(now()) @map("created_at")
+  post       Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([postId], map: "post_reactions_post_id2_fkey")
+  @@index([userId], map: "post_reactions_user_id2_fkey")
+  @@map("post_reactions")
+}
+
 enum Provider {
   LOCAL
   GITHUB
@@ -21,110 +126,3 @@ enum ReactionType {
   LIKE
   DISLIKE
 }
-
-model User {
-  id          Int       @id @default(autoincrement())
-  email       String?   @unique
-  password    String?
-  name    String?
-  emailVerified DateTime?
-  image      String?
-  provider    Provider  @default(LOCAL)
-  created_at  DateTime  @default(now())
-  role        Role      @default(USER)
-
-  accounts    Account[] 
-  sessions    Session[] 
-  posts       Post[]     @relation("UserToPost")
-  reactions   PostReaction[]
-
-  @@map("users")
-}
-
-model Account {
-  id                  String  @id @default(cuid())
-  userId              Int
-  type                String
-  provider            String
-  providerAccountId   String
-  refresh_token       String?
-  access_token        String?
-  expires_at          Int?
-  token_type          String?
-  scope               String?
-  id_token            String?
-  session_state       String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
-model Session {
-  id            String   @id @default(cuid())
-  sessionToken  String   @unique
-  userId        Int
-  expires       DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-}
-
-model Post {
-  id             Int             @id @default(autoincrement()) @map("post_id")
-  authorId       Int             @map("author_id")
-  title          String          @map("title")
-  content        String?         @db.Text @map("content")
-  like_count     Int             @default(0) @map("like_count")
-  dislike_count  Int             @default(0) @map("dislike_count")
-  created_at     DateTime        @default(now()) @map("created_at")
-  modified_at    DateTime        @updatedAt @map("modified_at")
-
-  author      User             @relation("UserToPost", fields: [authorId], references: [id])
-  reactions   PostReaction[]   
-  categories  PostCategory[]
-
-  @@map("posts")
-}
-
-model Category {
-  id            Int             @id @default(autoincrement()) @map("category_id")
-  category_name String          @map("category_name")
-
-  posts         PostCategory[]
-
-  @@map("categories")
-}
-
-model PostCategory {
-  postId      Int   @map("post_id")
-  categoryId  Int   @map("category_id")
-
-  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-
-  @@id([postId, categoryId])
-  @@map("post_categories")
-}
-
-model PostReaction {
-  id             Int       @id @default(autoincrement()) @map("reaction_id")
-  userId         Int       @map("user_id2")
-  postId         Int       @map("post_id2")
-  type           ReactionType
-  created_at     DateTime  @default(now()) @map("created_at")
-
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
-
-  @@map("post_reactions")
-}
-
-

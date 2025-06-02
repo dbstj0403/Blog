@@ -53,8 +53,23 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
 
-    async signIn({ user, account }) {
+    async signIn({ user, account, profile }) {
       if (account?.provider === 'github') {
+        const existing = await prisma.user.findUnique({
+          where: { email: user.email! },
+        });
+
+        // ❗ 최초 로그인일 경우에만 업데이트
+        if (existing && !existing.image && profile?.avatar_url) {
+          await prisma.user.update({
+            where: { id: existing.id },
+            data: {
+              image: profile.avatar_url,
+            },
+          });
+        }
+
+        // 연동 확인 흐름 유지
         const linked = await prisma.account.findUnique({
           where: {
             provider_providerAccountId: {
@@ -63,11 +78,9 @@ export const authOptions: NextAuthOptions = {
             },
           },
         });
+
         if (linked) return true;
 
-        const existing = await prisma.user.findUnique({
-          where: { email: user.email! },
-        });
         if (existing) {
           return (
             `/auth/confirm-link?userId=${existing.id}` +
@@ -76,6 +89,7 @@ export const authOptions: NextAuthOptions = {
           );
         }
       }
+
       return true;
     },
 

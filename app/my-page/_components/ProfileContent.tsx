@@ -1,30 +1,30 @@
 'use client';
 
 import Image from 'next/image';
+import { useUser } from '@/app/context/UserContext';
+import profileIcon from '@/assets/icons/profileIcon.svg';
 
 const ProfileContent = () => {
+  const { user } = useUser();
   return (
     <>
-      {' '}
       <div className='pt-16 mt-10 px-4 sm:px-10 max-w-3xl mx-auto'>
-        {/* 유저 정보 */}
         <div className='flex items-center gap-4 mb-8'>
           <div className='w-20 h-20 rounded-full overflow-hidden border border-gray-300'>
             <Image
-              src='/default-profile.png'
-              alt='User profile'
+              src={user?.image || profileIcon}
+              alt='user-profile'
               width={80}
               height={80}
               className='object-cover'
             />
           </div>
           <div>
-            <p className='text-xl font-semibold'>홍길동</p>
-            <p className='text-gray-600 text-sm'>honggildong@example.com</p>
+            <p className='text-xl font-semibold'>{user?.name}</p>
+            <p className='text-gray-600 text-sm'>{user?.email}</p>
           </div>
         </div>
 
-        {/* 액션 메뉴 */}
         <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
           <div className='border rounded-xl p-5 hover:shadow transition'>
             <p className='font-medium text-gray-800'>내가 작성한 글</p>
