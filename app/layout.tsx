@@ -1,7 +1,7 @@
 import React from 'react';
 import './globals.css';
 import Providers from './providers';
-import Header from '@/components/Header';
+import Header from '@/components/common/Header';
 
 export const metadata = {
   title: 'Digital Hanaro Tech Blog',

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import Post from './Post';
+import Post from './BestPostItem';
 
 const CATEGORY_LIST = [
   { value: 'all', label: '전체' },

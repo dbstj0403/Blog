@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     if (existing) {
       const githubAccount = await prisma.account.findFirst({
         where: {
-          provider: 'github',
+          provider: 'GITHUB',
           user: { email },
         },
       });
@@ -45,7 +45,6 @@ export async function POST(req: Request) {
         email,
         password: hashed,
         name,
-        provider: 'local',
       },
     });
 

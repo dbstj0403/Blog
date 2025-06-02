@@ -10,13 +10,13 @@ datasource db {
 }
 
 enum Provider {
-  local
-  github
+  LOCAL
+  GITHUB
 }
 
 enum Role {
-  user
-  admin
+  USER
+  ADMIN
 }
 
 model User {
@@ -26,12 +26,12 @@ model User {
   name    String?
   emailVerified DateTime?
   image      String?
-  provider    Provider  @default(local)
+  provider    Provider  @default(LOCAL)
   created_at  DateTime  @default(now())
-  role        Role      @default(user)
+  role        Role      @default(USER)
 
-  accounts    Account[] // NextAuth OAuth 계정
-  sessions    Session[] // NextAuth 세션
+  accounts    Account[] 
+  sessions    Session[] 
 
   @@map("users")
 }

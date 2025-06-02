@@ -3,7 +3,7 @@ import logoIcon from '@/assets/icons/logoIcon.png';
 import searchIcon from '@/assets/icons/searchIcon.svg';
 import profileIcon from '@/assets/icons/profileIcon.svg';
 import Image from 'next/image';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import banner from '@/assets/banner/banner.webp';
-import Posts from '@/components/Posts';
-import BestPosts from '@/components/BestPosts';
+import Posts from '@/components/post/Posts';
+import BestPosts from '@/components/post/BestPosts';
 
 export default function Home() {
   return (
