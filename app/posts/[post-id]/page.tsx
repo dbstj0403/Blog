@@ -56,7 +56,7 @@ export default async function PostPage({ params }: PostPageProps) {
       <div className='flex gap-5 w-full items-stretch'>
         <div className='w-1/3 self-stretch'>
           <CategoryTab
-            categories={[{ category_name: '전체', postCount: totalCount }, ...categories]}
+            categories={[{ category_name: 'All', postCount: totalCount }, ...categories]}
             currentCategory={selectedCategory}
           />
         </div>
