@@ -4,6 +4,7 @@ import GitHubProvider from 'next-auth/providers/github';
 import { compare } from 'bcrypt';
 import type { NextAuthOptions } from 'next-auth';
 import { prisma } from './prismaClient';
+import { Provider as ProviderEnum } from '@prisma/client';
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -82,6 +83,15 @@ export const authOptions: NextAuthOptions = {
           });
         }
 
+        if (existing && existing.provider !== 'GITHUB') {
+          await prisma.user.update({
+            where: { id: existing.id },
+            data: {
+              provider: 'GITHUB',
+            },
+          });
+        }
+
         // 연동 확인 흐름 유지
         const linked = await prisma.account.findUnique({
           where: {
@@ -108,6 +118,18 @@ export const authOptions: NextAuthOptions = {
 
     async redirect({ baseUrl }) {
       return `${baseUrl}/`;
+    },
+  },
+
+  events: {
+    /** GitHub 계정이 연결(최초·재로그인 모두)된 직후 호출 */
+    async linkAccount({ user, account }) {
+      if (account.provider === 'github' && user.provider !== 'GITHUB') {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { provider: ProviderEnum.GITHUB }, // ← enum 값으로!
+        });
+      }
     },
   },
 
