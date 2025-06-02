@@ -1,12 +1,10 @@
-// app/api/posts/[postId]/route.ts
-
 import { prisma } from '@/lib/prismaClient';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 
 export async function DELETE(req: Request, { params }: { params: { 'post-id': string } }) {
-  const { ['post-id']: raw } = await params; // <- 여기!
+  const { ['post-id']: raw } = await params;
   const postId = Number(raw);
   const session = await getServerSession(authOptions);
   const userId = Number(session?.user?.id);

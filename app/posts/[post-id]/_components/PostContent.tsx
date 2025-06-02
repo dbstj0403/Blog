@@ -144,7 +144,7 @@ export default function PostContent({ post }: PostContentProps) {
   const submitEdit = async () => {
     // 공백 제거 & 빈 문자열 필터링
     const categoryNames = editCategories
-      .split(',')
+      .split(/[\s,]+/) // 쉼표 또는 공백 1개 이상으로 분리
       .map((n) => n.trim())
       .filter(Boolean);
 
@@ -227,7 +227,7 @@ export default function PostContent({ post }: PostContentProps) {
             <Input
               value={editCategories}
               onChange={(e) => setEditCategories(e.target.value)}
-              placeholder='카테고리를 쉼표로 구분하여 입력하세요'
+              placeholder='카테고리를 쉼표 또는 공백으로 구분하여 입력하세요'
             />
           ) : (
             <div className='flex gap-2'>
