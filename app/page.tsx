@@ -2,8 +2,10 @@ import Image from 'next/image';
 import banner from '@/assets/banner/banner.webp';
 import Posts from '@/components/post/Posts';
 import BestPosts from '@/components/post/BestPosts';
+import getCategories from '@/actions/getCategories';
 
-export default function Home() {
+export default async function Home() {
+  const categories = await getCategories();
   return (
     <>
       <div className='pt-16'>
@@ -15,7 +17,7 @@ export default function Home() {
 
         <div className='w-full px-5 pb-5 sm:flex sm:space-x-4'>
           <div className='w-full sm:w-2/3'>
-            <Posts />
+            <Posts categories={categories} />
           </div>
 
           <div className='w-full sm:w-1/3'>

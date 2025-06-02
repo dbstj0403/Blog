@@ -1,5 +1,3 @@
-// prisma/schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -19,6 +17,11 @@ enum Role {
   ADMIN
 }
 
+enum ReactionType {
+  LIKE
+  DISLIKE
+}
+
 model User {
   id          Int       @id @default(autoincrement())
   email       String?   @unique
@@ -32,6 +35,8 @@ model User {
 
   accounts    Account[] 
   sessions    Session[] 
+  posts       Post[]     @relation("UserToPost")
+  reactions   PostReaction[]
 
   @@map("users")
 }
@@ -71,3 +76,55 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model Post {
+  id             Int             @id @default(autoincrement()) @map("post_id")
+  authorId       Int             @map("author_id")
+  title          String          @map("title")
+  content        String?         @db.Text @map("content")
+  like_count     Int             @default(0) @map("like_count")
+  dislike_count  Int             @default(0) @map("dislike_count")
+  created_at     DateTime        @default(now()) @map("created_at")
+  modified_at    DateTime        @updatedAt @map("modified_at")
+
+  author      User             @relation("UserToPost", fields: [authorId], references: [id])
+  reactions   PostReaction[]   
+  categories  PostCategory[]
+
+  @@map("posts")
+}
+
+model Category {
+  id            Int             @id @default(autoincrement()) @map("category_id")
+  category_name String          @map("category_name")
+
+  posts         PostCategory[]
+
+  @@map("categories")
+}
+
+model PostCategory {
+  postId      Int   @map("post_id")
+  categoryId  Int   @map("category_id")
+
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([postId, categoryId])
+  @@map("post_categories")
+}
+
+model PostReaction {
+  id             Int       @id @default(autoincrement()) @map("reaction_id")
+  userId         Int       @map("user_id2")
+  postId         Int       @map("post_id2")
+  type           ReactionType
+  created_at     DateTime  @default(now()) @map("created_at")
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("post_reactions")
+}
+
+

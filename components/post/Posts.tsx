@@ -1,25 +1,35 @@
 'use client';
 
-import * as React from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import Post from './BestPostItem';
 
-const CATEGORY_LIST = [
-  { value: 'all', label: '전체' },
-  { value: 'react', label: 'React' },
-  { value: 'typescript', label: 'TypeScript' },
-  { value: 'spring', label: 'Spring' },
-];
+interface Category {
+  id: number;
+  category_name: string;
+}
 
-export default function Posts() {
-  const [selectedTab, setSelectedTab] = React.useState('all');
-  const tabRefs = React.useRef<Record<string, HTMLButtonElement | null>>({});
-  const [indicatorStyle, setIndicatorStyle] = React.useState({
+interface PostsProps {
+  categories: Category[];
+}
+
+export default function Posts({ categories }: PostsProps) {
+  const [selectedTab, setSelectedTab] = useState('all');
+  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [indicatorStyle, setIndicatorStyle] = useState({
     left: 0,
     width: 0,
   });
 
-  React.useEffect(() => {
+  const CATEGORY_LIST = [
+    { value: 'all', label: '전체' },
+    ...(categories ?? []).map((cat) => ({
+      value: cat.category_name.toLowerCase(),
+      label: cat.category_name,
+    })),
+  ];
+
+  useEffect(() => {
     const currentRef = tabRefs.current[selectedTab];
     if (currentRef) {
       setIndicatorStyle({
