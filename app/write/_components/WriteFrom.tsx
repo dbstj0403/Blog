@@ -1,0 +1,73 @@
+// components/WriteForm.tsx
+
+'use client';
+
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+const WriteForm = () => {
+  const router = useRouter();
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [category, setCategory] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const res = await fetch('/api/write', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, content, category }),
+    });
+
+    if (res.ok) {
+      const newPost = await res.json();
+      router.push(`/posts/${newPost.id}`);
+    } else {
+      alert('게시글 등록에 실패했습니다.');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className='max-w-3xl mx-auto mt-20 space-y-5 px-4 sm:px-0'>
+      <div>
+        <label className='block mb-2 font-medium text-gray-800'>제목</label>
+        <Input
+          type='text'
+          placeholder='제목을 입력하세요'
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label className='block mb-2 font-medium text-gray-800'>내용</label>
+        <Textarea
+          rows={10}
+          placeholder='내용을 입력하세요'
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label className='block mb-2 font-medium text-gray-800'>카테고리</label>
+        <Input
+          type='text'
+          placeholder='카테고리를 입력하세요 (예: React)'
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        />
+      </div>
+
+      <Button type='submit' className='w-full sm:w-auto'>
+        등록하기
+      </Button>
+    </form>
+  );
+};
+
+export default WriteForm;

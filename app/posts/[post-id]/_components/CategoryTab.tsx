@@ -17,7 +17,7 @@ const CategoryTab = ({ categories, currentCategory }: CategoryTabProps) => {
     .reduce((sum, cat) => sum + cat.postCount, 0);
 
   return (
-    <div className='w-full bg-black text-gray-300 px-8 pt-16 mt-10 min-h-screen space-y-6'>
+    <div className='w-full bg-black text-gray-300 px-8 pt-16 mt-10 min-h-screen space-y-6 h-full'>
       <div>
         <h2 className='text-white text-lg font-semibold mb-3'>전체보기 ({totalCount})</h2>
         <ul className='space-y-2'>

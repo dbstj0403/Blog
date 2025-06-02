@@ -81,7 +81,7 @@ model Post {
 
 model Category {
   id            Int            @id @default(autoincrement()) @map("category_id")
-  category_name String         @map("category_name")
+  category_name String         @unique @map("category_name")
   posts         PostCategory[]
 
   @@map("categories")
