@@ -45,15 +45,15 @@ export default async function CategoryDetailPage({ params }: CategoryDetailPageP
 
   return (
     <div className='flex gap-5 w-full items-stretch'>
-      <div className='w-1/3 self-stretch'>
+      <div className='w-[25%] self-stretch'>
         <CategoryTab
           categories={[{ category_name: 'All', postCount: totalCount }, ...categories]}
           currentCategory={categoryName}
         />
       </div>
 
-      <div className='w-2/3'>
-        <Posts posts={posts} />
+      <div className='w-[75%]'>
+        <Posts posts={posts} categoryName={categoryName} />
       </div>
     </div>
   );

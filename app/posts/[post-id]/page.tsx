@@ -54,14 +54,14 @@ export default async function PostPage({ params }: PostPageProps) {
   return (
     <>
       <div className='flex gap-5 w-full items-stretch'>
-        <div className='w-1/3 self-stretch'>
+        <div className='w-[25%] self-stretch'>
           <CategoryTab
             categories={[{ category_name: 'All', postCount: totalCount }, ...categories]}
             currentCategory={selectedCategory}
           />
         </div>
 
-        <div className='w-2/3'>
+        <div className='w-[75%]'>
           <PostContent
             post={{
               ...post,
