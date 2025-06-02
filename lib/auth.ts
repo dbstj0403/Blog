@@ -46,11 +46,24 @@ export const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
+    async jwt({ token }) {
+      const userInDb = await prisma.user.findUnique({
+        where: { email: token.email as string },
+      });
+
+      if (userInDb) {
+        token.name = userInDb.name;
+        token.role = userInDb.role;
+      }
+
+      return token;
+    },
     async session({ session, token }) {
       if (token?.sub) session.user.id = token.sub;
       if (token?.email) session.user.email = token.email as string;
       if (token?.name) session.user.name = token.name as string;
       if (token?.picture) session.user.image = token.picture as string;
+      if (token?.role) session.user.role = token.role as string;
       return session;
     },
 
@@ -60,7 +73,6 @@ export const authOptions: NextAuthOptions = {
           where: { email: user.email! },
         });
 
-        // ❗ 최초 로그인일 경우에만 업데이트
         if (existing && !existing.image && profile?.avatar_url) {
           await prisma.user.update({
             where: { id: existing.id },

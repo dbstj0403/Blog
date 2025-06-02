@@ -2,15 +2,20 @@
 
 import Image from 'next/image';
 import { useUser } from '@/app/context/UserContext';
+import { useSession } from 'next-auth/react';
 import profileIcon from '@/assets/icons/profileIcon.svg';
 import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 import Modal from '@/components/common/Modal';
+import EditProfileModal from './EditProfileModal';
 
 const ProfileContent = ({ user }: { user: any }) => {
   // const { user } = useUser();
+  const { update } = useSession();
+  const [userName, setUserName] = useState(user?.name ?? '');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const handleLogout = () => {
     setShowLogoutModal(true);
@@ -54,28 +59,36 @@ const ProfileContent = ({ user }: { user: any }) => {
             />
           </div>
           <div>
-            <p className='text-xl font-semibold'>{user?.name}</p>
+            <p className='text-xl font-semibold'>{userName}</p>
             <p className='text-gray-600 text-sm'>{user?.email}</p>
           </div>
         </div>
 
         <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
           <div className='border rounded-xl p-5 hover:shadow transition'>
-            <p className='font-medium text-gray-800'>내가 작성한 글</p>
-            <p className='text-sm text-gray-500 mt-1'>작성한 게시글을 확인할 수 있어요.</p>
-          </div>
-
-          <div className='border rounded-xl p-5 hover:shadow transition'>
             <p className='font-medium text-gray-800'>좋아요 누른 글</p>
             <p className='text-sm text-gray-500 mt-1'>관심 있는 게시글 목록이에요.</p>
           </div>
 
-          <div className='border rounded-xl p-5 hover:shadow transition'>
+          <div
+            className='border rounded-xl p-5 hover:shadow transition'
+            onClick={() => setShowEditModal(true)}
+          >
             <p className='font-medium text-gray-800'>내 정보 수정</p>
-            <p className='text-sm text-gray-500 mt-1'>
-              프로필 이미지, 닉네임 등을 변경할 수 있어요.
-            </p>
+            <p className='text-sm text-gray-500 mt-1'>프로필 닉네임을 변경할 수 있어요.</p>
           </div>
+
+          <EditProfileModal
+            currentName={user.name || ''}
+            isOpen={showEditModal}
+            onClose={() => setShowEditModal(false)}
+            onSuccess={async (newName: string) => {
+              setUserName(newName); // 로컬 상태 반영
+              setShowEditModal(false);
+              await update(); // ✅ 세션 갱신
+              window.location.reload();
+            }}
+          />
 
           <div
             onClick={handleLogout}
@@ -87,7 +100,7 @@ const ProfileContent = ({ user }: { user: any }) => {
 
           <div
             onClick={handleDeleteAccount}
-            className='border rounded-xl p-5 hover:shadow transition cursor-pointer bg-red-50'
+            className='border rounded-xl p-5 hover:shadow transition cursor-pointer'
           >
             <p className='font-medium text-red-600'>회원 탈퇴</p>
             <p className='text-sm text-red-500 mt-1'>계정을 완전히 삭제합니다. 되돌릴 수 없어요.</p>
@@ -132,7 +145,7 @@ const ProfileContent = ({ user }: { user: any }) => {
           },
         ]}
       >
-        정말로 탈퇴하시겠습니까? 탈퇴 시 모든 정보가 삭제됩니다.
+        정말 탈퇴하시겠습니까? 탈퇴 시 모든 정보가 삭제됩니다.
       </Modal>
     </>
   );
