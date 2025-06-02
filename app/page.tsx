@@ -39,7 +39,6 @@ export default async function Home() {
 
         <div className='w-full px-5 pb-5 sm:flex sm:space-x-4'>
           <div className='w-full sm:w-2/3'>
-            {/* postsByCategory 객체를 그대로 넘겨야 합니다 */}
             <Posts categories={categories} postsByCategory={postsByCategory} />
           </div>
 

@@ -15,10 +15,6 @@ export type PostWithAuthor = {
   };
 };
 
-/**
- * 주어진 카테고리명이 'all'일 경우 모든 포스트를,
- * 그렇지 않으면 해당 카테고리에 속한 포스트만 반환합니다.
- */
 export async function getPostsByCategory(categoryName: string): Promise<PostWithAuthor[]> {
   if (categoryName === 'all') {
     return prisma.post.findMany({

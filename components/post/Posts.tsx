@@ -1,11 +1,9 @@
-// components/post/Posts.tsx
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import Post from './BestPostItem';
+import Post from './Post';
 
-// ① created_at, modified_at를 Date로 선언
 interface Category {
   id: number;
   category_name: string;
@@ -17,7 +15,7 @@ interface PostWithAuthor {
   content: string | null;
   like_count: number;
   dislike_count: number;
-  created_at: Date; // Server에서 Date로 내려오는 형태
+  created_at: Date;
   modified_at: Date;
   author: {
     id: number;
@@ -60,7 +58,6 @@ export default function Posts({ categories, postsByCategory }: PostsProps) {
       className='w-full sm:pl-10'
       onValueChange={(value) => setSelectedTab(value)}
     >
-      {/* ─── 탭 리스트 ─── */}
       <TabsList>
         {CATEGORY_LIST.map((cat) => (
           <TabsTrigger
@@ -89,7 +86,7 @@ export default function Posts({ categories, postsByCategory }: PostsProps) {
             {postsByCategory[cat.value]?.length > 0 ? (
               postsByCategory[cat.value].map((post) => <Post key={post.id} post={post} />)
             ) : (
-              <p className='text-gray-500'>해당 카테고리에 게시물이 없습니다.</p>
+              <p className='text-gray-500 font-semibold'>해당 카테고리에 게시물이 없습니다.</p>
             )}
           </div>
         </TabsContent>
