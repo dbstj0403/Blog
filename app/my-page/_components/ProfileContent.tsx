@@ -8,10 +8,12 @@ import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 import Modal from '@/components/common/Modal';
 import EditProfileModal from './EditProfileModal';
+import { useRouter } from 'next/navigation';
 
 const ProfileContent = ({ user }: { user: any }) => {
+  const router = useRouter();
   // const { user } = useUser();
-  const { update } = useSession();
+  const { update, data: session } = useSession();
   const [userName, setUserName] = useState(user?.name ?? '');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -65,13 +67,13 @@ const ProfileContent = ({ user }: { user: any }) => {
         </div>
 
         <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-          <div className='border rounded-xl p-5 hover:shadow transition'>
+          <div className='border rounded-xl p-5 hover:shadow transition cursor-pointer'>
             <p className='font-medium text-gray-800'>좋아요 누른 글</p>
             <p className='text-sm text-gray-500 mt-1'>관심 있는 게시글 목록이에요.</p>
           </div>
 
           <div
-            className='border rounded-xl p-5 hover:shadow transition'
+            className='border rounded-xl p-5 hover:shadow transition cursor-pointer'
             onClick={() => setShowEditModal(true)}
           >
             <p className='font-medium text-gray-800'>내 정보 수정</p>
@@ -105,6 +107,17 @@ const ProfileContent = ({ user }: { user: any }) => {
             <p className='font-medium text-red-600'>회원 탈퇴</p>
             <p className='text-sm text-red-500 mt-1'>계정을 완전히 삭제합니다. 되돌릴 수 없어요.</p>
           </div>
+
+          {/* ✅ 관리자 전용 카드 */}
+          {session?.user.role === 'ADMIN' && (
+            <div
+              onClick={() => router.push('/admin')}
+              className='border rounded-xl p-5 hover:shadow transition cursor-pointer'
+            >
+              <p className='font-medium text-gray-800'>관리자 페이지</p>
+              <p className='text-sm text-gray-500 mt-1'>서비스 관리 페이지로 이동합니다.</p>
+            </div>
+          )}
         </div>
       </div>
 
