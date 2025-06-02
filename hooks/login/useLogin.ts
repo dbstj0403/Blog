@@ -76,7 +76,6 @@ const useLogin = (): UseLoginResult => {
       await signIn('github', {
         callbackUrl: window.location.origin,
       });
-      // NextAuth가 자동으로 리다이렉트 처리
     } catch (err: any) {
       console.error(err);
       setError('Github 로그인 중 오류가 발생했습니다.');

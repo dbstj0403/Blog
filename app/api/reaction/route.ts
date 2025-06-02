@@ -8,13 +8,11 @@ type Reaction = (typeof ALLOWED)[number];
 const err = (m: string, s = 400) => NextResponse.json({ message: m }, { status: s });
 
 export async function POST(req: NextRequest) {
-  /* ── 1. 인증 ─────────────────────────────────────────────── */
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return err('Unauthorized', 401);
   const userId = Number(session.user.id);
   if (isNaN(userId)) return err('Invalid user id', 400);
 
-  /* ── 2. 입력 파싱 ─────────────────────────────────────────── */
   let body: { postId?: unknown; type?: unknown };
   try {
     body = await req.json();
@@ -48,8 +46,6 @@ export async function POST(req: NextRequest) {
             data: { dislike_count: { increment: 1 } },
           });
       } else if (existing.type === type) {
-
-      /* b) 같은 타입을 다시 눌렀다 → 삭제(취소) */
         await tx.postReaction.delete({ where: { id: existing.id } });
         if (type === 'LIKE')
           await tx.post.update({
@@ -62,8 +58,6 @@ export async function POST(req: NextRequest) {
             data: { dislike_count: { decrement: 1 } },
           });
       } else {
-
-      /* c) 다른 타입으로 변경 */
         await tx.postReaction.update({
           where: { id: existing.id },
           data: { type },
@@ -86,7 +80,6 @@ export async function POST(req: NextRequest) {
           });
       }
 
-      /* 최신 카운트 + 나의 반응 상태 반환 */
       const p = await tx.post.findUniqueOrThrow({
         where: { id: postId },
         select: { like_count: true, dislike_count: true },

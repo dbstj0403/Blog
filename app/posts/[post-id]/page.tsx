@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import PostContent from './_components/PostContent';
 import { notFound } from 'next/navigation';
 import { ReactionType } from '@prisma/client';
+import CategoryTab from './_components/CategoryTab';
+import { getCategoryCounts } from '@/actions/getCategoryCounts';
 
 interface PostPageProps {
   params: { 'post-id': string };
@@ -12,8 +14,8 @@ interface PostPageProps {
 export default async function PostPage({ params }: PostPageProps) {
   const session = await getServerSession(authOptions);
   const currentUserId = session?.user?.id ? Number(session.user.id) : null;
-
-  const postId = Number(params['post-id']);
+  const { 'post-id': rawId } = await params;
+  const postId = await Number(rawId);
   if (isNaN(postId)) notFound();
 
   const post = await prisma.post.findUnique({
@@ -46,12 +48,28 @@ export default async function PostPage({ params }: PostPageProps) {
       ? (ReactionType[post.reactions[0].type] as 'LIKE' | 'DISLIKE')
       : null;
 
+  const { totalCount, categories } = await getCategoryCounts();
+  const selectedCategory = post.categories[0]?.category.category_name ?? '전체';
+
   return (
-    <PostContent
-      post={{
-        ...post,
-        myReaction,
-      }}
-    />
+    <>
+      <div className='flex gap-5 w=full'>
+        <div className='w-1/3'>
+          <CategoryTab
+            categories={[{ category_name: '전체', postCount: totalCount }, ...categories]}
+            currentCategory={selectedCategory}
+          />
+        </div>
+
+        <div className='w-2/3'>
+          <PostContent
+            post={{
+              ...post,
+              myReaction,
+            }}
+          />
+        </div>
+      </div>
+    </>
   );
 }

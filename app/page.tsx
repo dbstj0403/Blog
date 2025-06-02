@@ -4,12 +4,10 @@ import Posts from '@/components/post/Posts';
 import BestPosts from '@/components/post/BestPosts';
 import getCategories from '@/actions/getCategories';
 import { getPostsByCategory, PostWithAuthor } from '@/actions/getPostsByCategory';
-import { getBestPosts } from '@/actions/getBestPosts';
 
 export default async function Home() {
   const categories = await getCategories();
   const allPostsPromise = await getPostsByCategory('all');
-  const bestPosts = await getBestPosts(5);
 
   const postsByCategoryPromises = categories.map(async (cat) => {
     const key = cat.category_name.toLowerCase();
@@ -44,7 +42,7 @@ export default async function Home() {
           </div>
 
           <div className='w-full sm:w-1/3'>
-            <BestPosts bestPosts={bestPosts} />
+            <BestPosts />
           </div>
         </div>
       </div>

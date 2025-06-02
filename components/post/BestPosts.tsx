@@ -32,11 +32,11 @@ export default function BestPosts() {
 
   return (
     <div className='flex flex-col mt-5 sm:mt-0 sm:px-5 w-full sm:border-l-[1px] sm:border-gray-300 sm:min-h-screen sm:mx-5 sm:border-t-0 border-t-[1px] border-gray-300'>
-      <p className='text-sm text-gray-500 mb-5 mt-5 sm:mt-0 font-semibold'>
+      <div className='text-sm text-gray-500 mb-5 mt-5 sm:mt-0 font-semibold'>
         <div className='flex gap-2'>
           <Image src={fireIcon} alt='fire' className='w-5 h-5' /> <p>인기 있는 글</p>
         </div>
-      </p>
+      </div>
 
       <div className='flex flex-col gap-8'>
         {bestPosts.map((post) => (

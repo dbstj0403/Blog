@@ -46,7 +46,12 @@ const Header = () => {
         <Image src={searchIcon} alt='search' className='cursor-pointer w-4 h-4 sm:w-6 sm:h-6' />
 
         {status === 'authenticated' && (
-          <Image src={profileIcon} alt='profile' className='cursor-pointer w-5 h-5 sm:w-7 sm:h-7' />
+          <Image
+            src={profileIcon}
+            alt='profile'
+            className='cursor-pointer w-5 h-5 sm:w-7 sm:h-7'
+            onClick={() => router.push('/my-page')}
+          />
         )}
       </div>
     </div>

@@ -1,5 +1,11 @@
+import ProfileContent from './_components/ProfileContent';
+
 const MyPage = () => {
-  return <></>;
+  return (
+    <>
+      <ProfileContent />
+    </>
+  );
 };
 
 export default MyPage;
