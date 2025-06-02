@@ -2,12 +2,15 @@
 
 import { useSession } from 'next-auth/react';
 import { useState, useTransition, useCallback } from 'react';
-import convertDateFormat from '@/utils/convertDateFormat';
+import { convertDateTimeFormat } from '@/utils/convertDateFormat';
 import Image from 'next/image';
 import Modal from '@/components/common/Modal';
 
 import thumbsup from '@/assets/icons/thumbsupIcon.svg';
 import thumbsdown from '@/assets/icons/thumbsdownIcon.svg';
+
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 import { useUser } from '@/app/context/UserContext';
 
@@ -57,9 +60,17 @@ export default function PostContent({ post }: PostContentProps) {
   const [myReaction, setMyReaction] = useState<'LIKE' | 'DISLIKE' | null>(initialReaction ?? null);
   const [isPending, startTransition] = useTransition();
   const [showModal, setShowModal] = useState(false);
+  const [showCatModal, setShowCatModal] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
-  const created = convertDateFormat(created_at);
-  const modified = convertDateFormat(modified_at);
+  const [editTitle, setEditTitle] = useState(title);
+  const [editContent, setEditContent] = useState(content ?? '');
+  const [editCategories, setEditCategories] = useState(
+    categories.map((c) => c.category.category_name).join(', '),
+  );
+
+  const created = convertDateTimeFormat(created_at);
+  const modified = convertDateTimeFormat(modified_at);
 
   const request = useCallback(
     async (type: 'LIKE' | 'DISLIKE') => {
@@ -124,7 +135,6 @@ export default function PostContent({ post }: PostContentProps) {
         if (err instanceof Error && err.message === 'Unauthorized') {
           setShowModal(true);
         } else {
-          // 롤백
           setLikes(prevLike);
           setDislikes(prevDislike);
           setMyReaction(prevReaction);
@@ -134,89 +144,155 @@ export default function PostContent({ post }: PostContentProps) {
     });
   };
 
+  const submitEdit = async () => {
+    // 공백 제거 & 빈 문자열 필터링
+    const categoryNames = editCategories
+      .split(',')
+      .map((n) => n.trim())
+      .filter(Boolean);
+
+    if (categoryNames.length === 0) {
+      setShowCatModal(true); // ← 모달 열기
+      return;
+    }
+
+    const res = await fetch(`/api/posts/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: editTitle, content: editContent, categoryNames }),
+    });
+
+    if (res.ok) {
+      window.location.reload();
+    } else {
+      alert('게시글 수정에 실패했습니다.');
+    }
+  };
+
   return (
     <>
       <div className='pt-16 mt-10 flex justify-center px-6 pb-15'>
         <div className='max-w-3xl w-full flex flex-col gap-5'>
-          {/* 관리자 수정/삭제 버튼 */}
-
           <div className='flex justify-between'>
-            <p className='font-bold text-3xl'>{title}</p>
+            {editMode ? (
+              <Input
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                className='text-2xl font-bold w-[90%]'
+              />
+            ) : (
+              <p className='font-bold text-3xl'>{title}</p>
+            )}
             {user?.role === 'ADMIN' && (
               <div className='flex justify-end gap-2'>
-                <button
-                  className='text-sm text-gray-500 hover:underline cursor-pointer'
-                  onClick={() => alert('수정 페이지로 이동')} // 또는 router.push(`/edit/${id}`)
-                >
-                  수정
-                </button>
-                <button
-                  className='text-sm text-gray-500 hover:underline cursor-pointer'
-                  onClick={() => {
-                    if (confirm('정말 삭제하시겠습니까?')) {
-                      // 삭제 로직 추가
-                      fetch(`/api/posts/${id}`, {
-                        method: 'DELETE',
-                      }).then(() => (window.location.href = '/'));
-                    }
-                  }}
-                >
-                  삭제
-                </button>
+                {editMode ? (
+                  <>
+                    <button
+                      onClick={submitEdit}
+                      className='text-sm text-hana-green cursor-pointer hover:underline'
+                    >
+                      저장
+                    </button>
+                    <button
+                      onClick={() => setEditMode(false)}
+                      className='text-sm text-gray-500 cursor-pointer hover:underline'
+                    >
+                      취소
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setEditMode(true)}
+                      className='text-sm text-gray-500 hover:underline'
+                    >
+                      수정
+                    </button>
+                    <button
+                      className='text-sm text-gray-500 hover:underline'
+                      onClick={() => {
+                        if (confirm('정말 삭제하시겠습니까?')) {
+                          fetch(`/api/posts/${id}`, {
+                            method: 'DELETE',
+                          }).then(() => (window.location.href = '/'));
+                        }
+                      }}
+                    >
+                      삭제
+                    </button>
+                  </>
+                )}
               </div>
             )}
           </div>
 
-          <div className='flex gap-2'>
-            {categories.map((c) => (
-              <span
-                key={c.categoryId}
-                className='rounded-full bg-gray-200 px-3 py-2 text-sm text-gray-700'
-              >
-                #{c.category.category_name}
-              </span>
-            ))}
-          </div>
+          {editMode ? (
+            <Input
+              value={editCategories}
+              onChange={(e) => setEditCategories(e.target.value)}
+              placeholder='카테고리를 쉼표로 구분하여 입력하세요'
+            />
+          ) : (
+            <div className='flex gap-2'>
+              {categories.map((c) => (
+                <span
+                  key={c.categoryId}
+                  className='rounded-full bg-gray-200 px-3 py-2 text-sm text-gray-700'
+                >
+                  #{c.category.category_name}
+                </span>
+              ))}
+            </div>
+          )}
 
           <div className='text-sm text-gray-600 flex flex-col gap-1 pl-2 mb-10'>
             <span>{author?.name ?? '익명'}</span>
-            <span>작성일 : {created}</span>
-            <span>마지막 수정일 : {modified}</span>
+            <div className='flex gap-2 mt-2'>
+              <span>작성일 : {created}</span>
+              <span>마지막 수정일 : {modified}</span>
+            </div>
           </div>
 
-          <div className='pl-3 whitespace-pre-wrap leading-relaxed text-justify'>{content}</div>
+          {editMode ? (
+            <Textarea
+              value={editContent}
+              onChange={(e) => setEditContent(e.target.value)}
+              rows={10}
+              className='min-h-[200px]'
+            />
+          ) : (
+            <div className='pl-3 whitespace-pre-wrap leading-relaxed text-justify'>{content}</div>
+          )}
 
-          <div className='mt-15 flex gap-4 justify-center'>
-            <button
-              disabled={isPending}
-              onClick={() => handle('LIKE')}
-              className={`flex items-center gap-2 rounded-lg px-5 py-2 text-sm cursor-pointer font-medium transition
-                ${
+          {!editMode && (
+            <div className='mt-15 flex gap-4 justify-center'>
+              <button
+                disabled={isPending}
+                onClick={() => handle('LIKE')}
+                className={`flex items-center gap-2 rounded-lg px-5 py-2 text-sm cursor-pointer font-medium transition ${
                   myReaction === 'LIKE'
                     ? 'bg-hana-green text-white shadow'
                     : 'bg-white text-hana-green border-[2px] border-hana-green'
-                }
-                disabled:opacity-50 focus:outline-none`}
-            >
-              <Image src={thumbsup} alt='like' className='w-5 h-5' />
-              <span>{likes}</span>
-            </button>
+                } disabled:opacity-50 focus:outline-none`}
+              >
+                <Image src={thumbsup} alt='like' className='w-5 h-5' />
+                <span>{likes}</span>
+              </button>
 
-            <button
-              disabled={isPending}
-              onClick={() => handle('DISLIKE')}
-              className={`flex items-center gap-2 rounded-lg px-5 py-2 text-sm cursor-pointer font-medium transition
-                ${
+              <button
+                disabled={isPending}
+                onClick={() => handle('DISLIKE')}
+                className={`flex items-center gap-2 rounded-lg px-5 py-2 text-sm cursor-pointer font-medium transition ${
                   myReaction === 'DISLIKE'
                     ? 'bg-gray-400 text-white shadow'
                     : 'bg-white text-gray-700 border-[2px] border-gray-400'
-                }
-                disabled:opacity-50 focus:outline-none`}
-            >
-              <Image src={thumbsdown} alt='dislike' className='w-5 h-5' />
-              <span>{dislikes}</span>
-            </button>
-          </div>
+                } disabled:opacity-50 focus:outline-none`}
+              >
+                <Image src={thumbsdown} alt='dislike' className='w-5 h-5' />
+                <span>{dislikes}</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -236,6 +312,14 @@ export default function PostContent({ post }: PostContentProps) {
         ]}
       >
         로그인이 필요한 기능입니다. 로그인 후 다시 시도해주세요.
+      </Modal>
+
+      <Modal
+        isOpen={showCatModal}
+        onClose={() => setShowCatModal(false)}
+        actions={[{ label: '확인', onClick: () => setShowCatModal(false) }]}
+      >
+        카테고리를 하나 이상 입력해주세요.
       </Modal>
     </>
   );
