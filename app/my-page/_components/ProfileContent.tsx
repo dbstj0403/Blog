@@ -3,9 +3,43 @@
 import Image from 'next/image';
 import { useUser } from '@/app/context/UserContext';
 import profileIcon from '@/assets/icons/profileIcon.svg';
+import { signOut } from 'next-auth/react';
+import { useState } from 'react';
+import Modal from '@/components/common/Modal';
 
-const ProfileContent = () => {
-  const { user } = useUser();
+const ProfileContent = ({ user }: { user: any }) => {
+  // const { user } = useUser();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    setShowLogoutModal(false);
+    signOut({ callbackUrl: '/' });
+  };
+
+  const handleDeleteAccount = () => {
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    setShowDeleteModal(false);
+
+    const res = await fetch('/api/users/delete', {
+      method: 'DELETE',
+    });
+
+    if (res.ok) {
+      alert('탈퇴가 완료되었습니다.');
+      signOut({ callbackUrl: '/' });
+    } else {
+      alert('탈퇴 중 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <>
       <div className='pt-16 mt-10 px-4 sm:px-10 max-w-3xl mx-auto'>
@@ -43,12 +77,63 @@ const ProfileContent = () => {
             </p>
           </div>
 
-          <div className='border rounded-xl p-5 hover:shadow transition'>
+          <div
+            onClick={handleLogout}
+            className='border rounded-xl p-5 hover:shadow transition cursor-pointer'
+          >
             <p className='font-medium text-gray-800'>로그아웃</p>
             <p className='text-sm text-gray-500 mt-1'>로그아웃하고 메인으로 돌아가요.</p>
           </div>
+
+          <div
+            onClick={handleDeleteAccount}
+            className='border rounded-xl p-5 hover:shadow transition cursor-pointer bg-red-50'
+          >
+            <p className='font-medium text-red-600'>회원 탈퇴</p>
+            <p className='text-sm text-red-500 mt-1'>계정을 완전히 삭제합니다. 되돌릴 수 없어요.</p>
+          </div>
         </div>
       </div>
+
+      {/* 로그아웃 확인 모달 */}
+      <Modal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        actions={[
+          {
+            label: '로그아웃',
+            onClick: confirmLogout,
+            className: 'bg-hana-green text-white hover:bg-hana-green/90',
+          },
+          {
+            label: '취소',
+            onClick: () => setShowLogoutModal(false),
+            className: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
+          },
+        ]}
+      >
+        로그아웃 하시겠습니까?
+      </Modal>
+
+      {/* 탈퇴 확인 모달 */}
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        actions={[
+          {
+            label: '탈퇴하기',
+            onClick: confirmDelete,
+            className: 'bg-red-600 text-white hover:bg-red-700',
+          },
+          {
+            label: '취소',
+            onClick: () => setShowDeleteModal(false),
+            className: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
+          },
+        ]}
+      >
+        정말로 탈퇴하시겠습니까? 탈퇴 시 모든 정보가 삭제됩니다.
+      </Modal>
     </>
   );
 };

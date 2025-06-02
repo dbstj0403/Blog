@@ -15,7 +15,7 @@ const SignupForm = () => {
           <p className='font-semibold text-sm'>Digital Hanaro Tech</p>
         </div>
         <p className='text-2xl font-semibold text-gray-600 mb-4'>회원가입</p>
-        {error && <p className='text-red-600 mb-4'>{error}</p>}
+        {error && <p className='text-red-600 mb-4 text-sm'>{error}</p>}
 
         <form onSubmit={handleSubmit} className='space-y-4'>
           <div>

@@ -53,7 +53,7 @@ const Header = () => {
           <>
             {user?.role === 'ADMIN' && (
               <div
-                className='flex gap-2 items-center border-[2px] rounded-lg px-2 py-1 cursor-pointer border-gray-600'
+                className='flex gap-2 bg-gray-800 text-white items-center rounded-lg px-2 py-1.5 cursor-pointer'
                 onClick={() => router.push('/write')}
               >
                 <Image

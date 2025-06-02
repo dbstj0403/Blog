@@ -1,11 +1,9 @@
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import ProfileContent from './_components/ProfileContent';
 
-const MyPage = () => {
-  return (
-    <>
-      <ProfileContent />
-    </>
-  );
-};
+export default async function ProfilePage() {
+  const session = await getServerSession(authOptions);
 
-export default MyPage;
+  return <ProfileContent user={session?.user} />;
+}

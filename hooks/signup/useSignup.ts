@@ -67,6 +67,12 @@ const useSignup = (): UseSignupResult => {
 
       const body = await res.json();
 
+      if (res.status === 400) {
+        // 이미 가입된 이메일
+        setError('이미 가입된 이메일입니다.');
+        return;
+      }
+
       if (res.status === 409 && body.code === 'GITHUB_EXIST') {
         const proceed = window.confirm(body.message);
         if (proceed) {

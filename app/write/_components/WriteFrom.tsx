@@ -62,7 +62,7 @@ const WriteForm = () => {
         />
       </div>
 
-      <Button type='submit' className='w-full sm:w-auto font-semibold p-5'>
+      <Button type='submit' className='w-full sm:w-auto font-semibold p-5 cursor-pointer'>
         등록하기
       </Button>
     </form>
