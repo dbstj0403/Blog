@@ -81,7 +81,7 @@ export default function Posts({ categories, postsByCategory }: PostsProps) {
       </TabsList>
 
       {CATEGORY_LIST.map((cat) => (
-        <TabsContent key={cat.value} value={cat.value} className='pt-6 sm:pl-5'>
+        <TabsContent key={cat.value} value={cat.value} className='pt-6 sm:pl-2'>
           <div className='space-y-8 cursor-pointer'>
             {postsByCategory[cat.value]?.length > 0 ? (
               postsByCategory[cat.value].map((post) => <Post key={post.id} post={post} />)

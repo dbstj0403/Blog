@@ -38,10 +38,10 @@ export default function BestPosts() {
         </div>
       </div>
 
-      <div className='flex flex-col gap-8'>
+      <div className='flex flex-col gap-6 sm:pr-5'>
         {bestPosts.map((post) => (
           <Link key={post.id} href={`/posts/${post.id}`}>
-            <div className='flex flex-col gap-3 cursor-pointer'>
+            <div className='flex flex-col gap-3 cursor-pointer border-[1px] border-gray-200 rounded-lg p-3 shadow-sm hover:bg-gray-50 transition'>
               <p className='text-base font-semibold line-clamp-2'>{post.title}</p>
               <p className='text-sm text-gray-500'>{post.author?.name ?? '익명'}</p>
             </div>

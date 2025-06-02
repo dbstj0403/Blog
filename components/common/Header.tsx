@@ -59,7 +59,7 @@ const Header = () => {
                 <Image
                   src={editIcon}
                   alt='write'
-                  className='cursor-pointer w-5 h-5 sm:w-6 sm:h-6'
+                  className='cursor-pointer w-5 h-5 sm:w-5 sm:h-5'
                   onClick={() => router.push('/write')}
                 />
                 <p className='text-xs sm:text-sm text=gray-500'>포스트 작성</p>

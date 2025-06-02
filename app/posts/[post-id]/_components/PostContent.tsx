@@ -9,6 +9,8 @@ import Modal from '@/components/common/Modal';
 import thumbsup from '@/assets/icons/thumbsupIcon.svg';
 import thumbsdown from '@/assets/icons/thumbsdownIcon.svg';
 
+import { useUser } from '@/app/context/UserContext';
+
 interface Author {
   id: number;
   name: string | null;
@@ -36,7 +38,7 @@ interface PostContentProps {
 export default function PostContent({ post }: PostContentProps) {
   const { data: session } = useSession();
   const isLoggedIn = !!session?.user;
-
+  const { user } = useUser();
   const {
     id,
     title,
@@ -134,9 +136,36 @@ export default function PostContent({ post }: PostContentProps) {
 
   return (
     <>
-      <div className='pt-16 mt-10 flex justify-center px-4 pb-15'>
+      <div className='pt-16 mt-10 flex justify-center px-6 pb-15'>
         <div className='max-w-3xl w-full flex flex-col gap-5'>
-          <h1 className='font-bold text-3xl'>{title}</h1>
+          {/* 관리자 수정/삭제 버튼 */}
+
+          <div className='flex justify-between'>
+            <p className='font-bold text-3xl'>{title}</p>
+            {user?.role === 'ADMIN' && (
+              <div className='flex justify-end gap-2'>
+                <button
+                  className='text-sm text-gray-500 hover:underline cursor-pointer'
+                  onClick={() => alert('수정 페이지로 이동')} // 또는 router.push(`/edit/${id}`)
+                >
+                  수정
+                </button>
+                <button
+                  className='text-sm text-gray-500 hover:underline cursor-pointer'
+                  onClick={() => {
+                    if (confirm('정말 삭제하시겠습니까?')) {
+                      // 삭제 로직 추가
+                      fetch(`/api/posts/${id}`, {
+                        method: 'DELETE',
+                      }).then(() => (window.location.href = '/'));
+                    }
+                  }}
+                >
+                  삭제
+                </button>
+              </div>
+            )}
+          </div>
 
           <div className='flex gap-2'>
             {categories.map((c) => (
@@ -155,7 +184,7 @@ export default function PostContent({ post }: PostContentProps) {
             <span>마지막 수정일 : {modified}</span>
           </div>
 
-          <div className='pl-3 whitespace-pre-wrap'>{content}</div>
+          <div className='pl-3 whitespace-pre-wrap leading-relaxed text-justify'>{content}</div>
 
           <div className='mt-15 flex gap-4 justify-center'>
             <button
