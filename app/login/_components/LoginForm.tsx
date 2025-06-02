@@ -3,10 +3,21 @@
 import logo from '@/assets/icons/logoIcon.png';
 import Image from 'next/image';
 import useLogin from '@/hooks/login/useLogin';
+import ConfirmLinkModal from '@/components/common/ConfirmModal';
 
 const LoginForm = () => {
-  const { formValues, loading, error, handleChange, handleCredentialsLogin, handleGithubLogin } =
-    useLogin();
+  const {
+    formValues,
+    loading,
+    error,
+    showConfirmModal,
+    confirmEmail,
+    handleChange,
+    handleCredentialsLogin,
+    handleGithubLogin,
+    handleConfirmLink,
+    handleCancelLink,
+  } = useLogin();
 
   return (
     <>
@@ -68,6 +79,13 @@ const LoginForm = () => {
           회원가입
         </p>
       </div>
+
+      <ConfirmLinkModal
+        isOpen={showConfirmModal}
+        email={confirmEmail}
+        onConfirm={handleConfirmLink}
+        onCancel={handleCancelLink}
+      />
     </>
   );
 };

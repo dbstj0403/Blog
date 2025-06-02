@@ -70,7 +70,7 @@ const SignupForm = () => {
           <button
             type='submit'
             disabled={loading}
-            className='w-full py-3 bg-hana-green text-white rounded-lg'
+            className='w-full py-3 bg-hana-green text-white rounded-lg cursor-pointer'
           >
             {loading ? '회원가입 처리 중입니다...' : '회원가입'}
           </button>
