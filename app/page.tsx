@@ -1,14 +1,15 @@
-// app/page.tsx (또는 app/home/page.tsx)
 import Image from 'next/image';
 import banner from '@/assets/banner/banner.webp';
 import Posts from '@/components/post/Posts';
 import BestPosts from '@/components/post/BestPosts';
 import getCategories from '@/actions/getCategories';
 import { getPostsByCategory, PostWithAuthor } from '@/actions/getPostsByCategory';
+import { getBestPosts } from '@/actions/getBestPosts';
 
 export default async function Home() {
   const categories = await getCategories();
-  const allPostsPromise = getPostsByCategory('all');
+  const allPostsPromise = await getPostsByCategory('all');
+  const bestPosts = await getBestPosts(5);
 
   const postsByCategoryPromises = categories.map(async (cat) => {
     const key = cat.category_name.toLowerCase();
@@ -43,7 +44,7 @@ export default async function Home() {
           </div>
 
           <div className='w-full sm:w-1/3'>
-            <BestPosts />
+            <BestPosts bestPosts={bestPosts} />
           </div>
         </div>
       </div>

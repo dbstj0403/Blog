@@ -147,7 +147,7 @@ export default function PostContent({ post }: PostContentProps) {
       ${
         myReaction === 'DISLIKE'
           ? 'bg-gray-400 text-white shadow'
-          : 'bg-white text-gray-700 border-[2px] border-gray-400 hover:bg-gray-100'
+          : 'bg-white text-gray-700 border-[2px] border-gray-400'
       }
       disabled:opacity-50 focus:outline-none`}
           >
