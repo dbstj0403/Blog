@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import searchIcon from '@/assets/icons/searchIcon.svg';
 import { Input } from '@/components/ui/input';
-
+import Post from '@/components/post/Post';
 interface SearchResult {
   post_id: number;
   title: string;
@@ -66,18 +66,11 @@ export default function SearchContainer() {
       {loading && <p className='text-gray-500 mt-4'>검색 중...</p>}
 
       {!loading && searched && results.length > 0 && (
-        <ul className='w-full max-w-xl space-y-4'>
+        <div className='w-full max-w-xl space-y-4'>
           {results.map((post) => (
-            <li
-              key={post.post_id}
-              className='border rounded-lg p-4 hover:shadow cursor-pointer'
-              onClick={() => (location.href = `/posts/${post.post_id}`)}
-            >
-              <h3 className='font-semibold'>{post.title}</h3>
-              {post.snippet && <p className='text-sm text-gray-600 truncate'>{post.snippet}</p>}
-            </li>
+            <Post key={post.id} post={post} />
           ))}
-        </ul>
+        </div>
       )}
 
       {!loading && searched && results.length === 0 && (
