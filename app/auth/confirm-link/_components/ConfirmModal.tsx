@@ -35,7 +35,8 @@ export default function ConfirmLinkModal({
       >
         <h2 className='text-lg font-semibold mb-4'>계정 연결 확인</h2>
         <p>
-          이메일 주소 <span className='font-medium'>{email}</span>로 이미 가입된 계정이 있습니다.
+          해당 이메일 주소 <span className='font-medium'>{email}</span>로 이미 가입된 계정이
+          있습니다.
         </p>
         <p className='mt-2'>
           이 GitHub 계정을 연결하면, 다음부터는 GitHub 로그인으로도 동일한 계정에 접근할 수
