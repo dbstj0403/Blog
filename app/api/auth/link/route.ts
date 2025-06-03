@@ -1,15 +1,20 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prismaClient';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prismaClient";
 
 export async function POST(req: Request) {
   try {
     const { userId, providerId, providerAccountId } = await req.json();
 
     const exists = await prisma.account.findUnique({
-      where: { provider_providerAccountId: { provider: providerId, providerAccountId } },
+      where: {
+        provider_providerAccountId: { provider: providerId, providerAccountId },
+      },
     });
     if (exists) {
-      return NextResponse.json({ message: '이미 연결된 계정입니다.' }, { status: 400 });
+      return NextResponse.json(
+        { message: "이미 연결된 계정입니다." },
+        { status: 400 },
+      );
     }
 
     await prisma.account.create({
@@ -17,7 +22,7 @@ export async function POST(req: Request) {
         userId: Number(userId),
         provider: providerId,
         providerAccountId,
-        type: 'oauth',
+        type: "oauth",
       },
     });
 

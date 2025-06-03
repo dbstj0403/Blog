@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prismaClient';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prismaClient";
 
 // 2글자 이상 토큰에 * 추가
 function makeBooleanWildcard(q: string) {
@@ -8,18 +8,21 @@ function makeBooleanWildcard(q: string) {
     .split(/\s+/)
     .filter((w) => w.length >= 2)
     .map((w) => `${w}*`)
-    .join(' ');
+    .join(" ");
 }
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const raw = searchParams.get('q')?.trim() ?? '';
+  const raw = searchParams.get("q")?.trim() ?? "";
 
   if (raw.length < 2)
-    return NextResponse.json({ message: '검색어는 두 글자 이상이어야 합니다.' }, { status: 400 });
+    return NextResponse.json(
+      { message: "검색어는 두 글자 이상이어야 합니다." },
+      { status: 400 },
+    );
 
-  const limit = Math.max(1, Number(searchParams.get('limit') ?? 20));
-  const page = Math.max(1, Number(searchParams.get('page') ?? 1));
+  const limit = Math.max(1, Number(searchParams.get("limit") ?? 20));
+  const page = Math.max(1, Number(searchParams.get("page") ?? 1));
   const offset = (page - 1) * limit;
   const boolean = makeBooleanWildcard(raw);
 
@@ -77,7 +80,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ data: posts, page, limit });
   } catch (e) {
-    console.error('[BOOLEAN SEARCH]', e);
-    return NextResponse.json({ message: '검색 실패' }, { status: 500 });
+    console.error("[BOOLEAN SEARCH]", e);
+    return NextResponse.json({ message: "검색 실패" }, { status: 500 });
   }
 }

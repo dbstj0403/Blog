@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prismaClient';
+import { prisma } from "@/lib/prismaClient";
 
 export type PostWithAuthor = {
   id: number;
@@ -15,10 +15,12 @@ export type PostWithAuthor = {
   };
 };
 
-export async function getPostsByCategory(categoryName: string): Promise<PostWithAuthor[]> {
-  if (categoryName === 'all') {
+export async function getPostsByCategory(
+  categoryName: string,
+): Promise<PostWithAuthor[]> {
+  if (categoryName === "all") {
     return prisma.post.findMany({
-      orderBy: { created_at: 'desc' },
+      orderBy: { created_at: "desc" },
       include: {
         author: {
           select: { id: true, name: true, image: true },
@@ -37,7 +39,7 @@ export async function getPostsByCategory(categoryName: string): Promise<PostWith
         },
       },
     },
-    orderBy: { created_at: 'desc' },
+    orderBy: { created_at: "desc" },
     include: {
       author: {
         select: { id: true, name: true, image: true },

@@ -1,14 +1,14 @@
 // app/api/admin/users/route.ts
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prismaClient';
+import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prismaClient";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
 
-  if (!session || session.user.role !== 'ADMIN') {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  if (!session || session.user.role !== "ADMIN") {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   const users = await prisma.user.findMany({
@@ -21,7 +21,7 @@ export async function GET() {
       created_at: true,
     },
     orderBy: {
-      created_at: 'desc',
+      created_at: "desc",
     },
   });
 

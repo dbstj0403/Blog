@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Modal from '@/components/common/Modal';
+import { useState } from "react";
+import Modal from "@/components/common/Modal";
 
 interface EditProfileModalProps {
   currentName: string;
@@ -21,9 +21,9 @@ export default function EditProfileModal({
 
   const handleSave = async () => {
     setLoading(true);
-    const res = await fetch('/api/users/update', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+    const res = await fetch("/api/users/update", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name }),
     });
 
@@ -31,11 +31,11 @@ export default function EditProfileModal({
     setLoading(false);
 
     if (res.ok) {
-      alert('닉네임이 수정되었습니다.');
+      alert("닉네임이 수정되었습니다.");
       onSuccess(name);
       onClose();
     } else {
-      alert(data.message || '수정에 실패했습니다.');
+      alert(data.message || "수정에 실패했습니다.");
     }
   };
 
@@ -45,26 +45,26 @@ export default function EditProfileModal({
       onClose={onClose}
       actions={[
         {
-          label: loading ? '저장 중...' : '저장',
+          label: loading ? "저장 중..." : "저장",
           onClick: handleSave,
-          className: 'bg-hana-green text-white hover:bg-hana-green/90',
+          className: "bg-hana-green text-white hover:bg-hana-green/90",
           disabled: loading,
         },
         {
-          label: '취소',
+          label: "취소",
           onClick: onClose,
-          className: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
+          className: "bg-gray-200 text-gray-800 hover:bg-gray-300",
         },
       ]}
     >
-      <div className='flex flex-col gap-3 text-sm'>
-        <label className='text-gray-700'>닉네임</label>
+      <div className="flex flex-col gap-3 text-sm">
+        <label className="text-gray-700">닉네임</label>
         <input
-          type='text'
+          type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className='border p-2 rounded'
-          placeholder='새 닉네임을 입력하세요'
+          className="border p-2 rounded"
+          placeholder="새 닉네임을 입력하세요"
         />
       </div>
     </Modal>

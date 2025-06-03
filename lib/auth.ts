@@ -1,20 +1,20 @@
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import GitHubProvider from 'next-auth/providers/github';
-import { compare } from 'bcrypt';
-import type { NextAuthOptions } from 'next-auth';
-import { prisma } from './prismaClient';
-import { Provider as ProviderEnum } from '@prisma/client';
+import type { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import GitHubProvider from "next-auth/providers/github";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { Provider as ProviderEnum } from "@prisma/client";
+import { compare } from "bcrypt";
+import { prisma } from "./prismaClient";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
 
   providers: [
     CredentialsProvider({
-      name: 'Email',
+      name: "Email",
       credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(creds) {
         if (!creds?.email || !creds.password) return null;
@@ -43,7 +43,7 @@ export const authOptions: NextAuthOptions = {
   ],
 
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
 
   callbacks: {
@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
     },
 
     async signIn({ user, account, profile }) {
-      if (account?.provider === 'github') {
+      if (account?.provider === "github") {
         const existing = await prisma.user.findUnique({
           where: { email: user.email! },
         });
@@ -83,11 +83,11 @@ export const authOptions: NextAuthOptions = {
           });
         }
 
-        if (existing && existing.provider !== 'GITHUB') {
+        if (existing && existing.provider !== "GITHUB") {
           await prisma.user.update({
             where: { id: existing.id },
             data: {
-              provider: 'GITHUB',
+              provider: "GITHUB",
             },
           });
         }
@@ -124,7 +124,7 @@ export const authOptions: NextAuthOptions = {
   events: {
     /** GitHub 계정이 연결(최초·재로그인 모두)된 직후 호출 */
     async linkAccount({ user, account }) {
-      if (account.provider === 'github' && user.provider !== 'GITHUB') {
+      if (account.provider === "github" && user.provider !== "GITHUB") {
         await prisma.user.update({
           where: { id: user.id },
           data: { provider: ProviderEnum.GITHUB }, // ← enum 값으로!
@@ -134,5 +134,5 @@ export const authOptions: NextAuthOptions = {
   },
 
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV === 'development',
+  debug: process.env.NODE_ENV === "development",
 };

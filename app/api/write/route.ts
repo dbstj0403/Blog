@@ -1,20 +1,23 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prismaClient';
+import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prismaClient";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   const user = session?.user;
 
   if (!user) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   const { title, content, category } = await req.json();
 
   if (!title || !category) {
-    return NextResponse.json({ message: '제목과 카테고리는 필수입니다.' }, { status: 400 });
+    return NextResponse.json(
+      { message: "제목과 카테고리는 필수입니다." },
+      { status: 400 },
+    );
   }
 
   // ✅ 카테고리 문자열 → 배열로 분리 (공백 기준)

@@ -1,4 +1,4 @@
-import WriteForm from './_components/WriteFrom';
+import WriteForm from "./_components/WriteFrom";
 
 const WritePage = () => {
   return (

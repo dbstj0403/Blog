@@ -1,8 +1,8 @@
-import { prisma } from '@/lib/prismaClient';
+import { prisma } from "@/lib/prismaClient";
 
 const getCategories = async () => {
   return await prisma.category.findMany({
-    orderBy: { id: 'asc' },
+    orderBy: { id: "asc" },
   });
 };
 
