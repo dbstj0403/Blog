@@ -7,7 +7,6 @@ const meta: Meta<typeof PostContent> = {
   component: PostContent,
   decorators: [
     (Story) => (
-      // 세션 필요하므로 Provider로 감쌈
       <SessionProvider session={null}>
         <Story />
       </SessionProvider>
