@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 interface LoginFormValues {
   email: string;
@@ -23,16 +23,16 @@ const useLogin = (): UseLoginResult => {
   const { status } = useSession();
 
   const [formValues, setFormValues] = useState<LoginFormValues>({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (status === "authenticated") {
-      router.replace("/");
+    if (status === 'authenticated') {
+      router.replace('/');
     }
   }, [status, router]);
 
@@ -49,22 +49,22 @@ const useLogin = (): UseLoginResult => {
     const { email, password } = formValues;
 
     try {
-      const res = await signIn("credentials", {
+      const res = await signIn('credentials', {
         redirect: false,
         email: email,
         password: password,
-        callbackUrl: "/",
+        callbackUrl: '/',
       });
 
       if (res?.ok && res.url) {
         router.push(res.url);
         return;
       } else {
-        setError("이메일 또는 비밀번호가 잘못되었습니다.");
+        setError('이메일 또는 비밀번호가 잘못되었습니다.');
       }
     } catch (err: any) {
       console.error(err);
-      setError("로그인 중 오류가 발생했습니다.");
+      setError('로그인 중 오류가 발생했습니다.');
     } finally {
       setLoading(false);
     }
@@ -75,12 +75,12 @@ const useLogin = (): UseLoginResult => {
     setError(null);
 
     try {
-      await signIn("github", {
+      await signIn('github', {
         callbackUrl: window.location.origin,
       });
     } catch (err: any) {
       console.error(err);
-      setError("Github 로그인 중 오류가 발생했습니다.");
+      setError('Github 로그인 중 오류가 발생했습니다.');
       setLoading(false);
     }
   };

@@ -5,7 +5,7 @@ import CategoryTab from '@/app/posts/[post-id]/_components/CategoryTab';
 import Posts from '../_components/Posts';
 
 interface CategoryDetailPageProps {
-  params: { 'category-name': string };
+  params: Promise<{ 'category-name': string }>;
 }
 
 export default async function CategoryDetailPage({ params }: CategoryDetailPageProps) {

@@ -3,8 +3,10 @@ import { NextResponse } from 'next/server';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prismaClient';
 
-export async function DELETE(req: Request, { params }: { params: { 'post-id': string } }) {
-  const { ['post-id']: raw } = await params;
+export async function DELETE(req: Request, { params }: { params: any }) {
+  // const { ['post-id']: raw } = await params;
+
+  const { ['post-id']: raw } = params;
   const postId = Number(raw);
   const session = await getServerSession(authOptions);
   const userId = Number(session?.user?.id);
@@ -33,10 +35,12 @@ export async function DELETE(req: Request, { params }: { params: { 'post-id': st
   return NextResponse.json({ message: '삭제 완료' }, { status: 200 });
 }
 
-export async function PATCH(req: Request, { params }: { params: { 'post-id': string } }) {
+export async function PATCH(req: Request, { params }: { params: any }) {
   const session = await getServerSession(authOptions);
   const userId = Number(session?.user?.id);
-  const { ['post-id']: raw } = await params;
+  // const { ['post-id']: raw } = await params;
+
+  const { ['post-id']: raw } = params;
   const postId = Number(raw);
 
   if (!userId || isNaN(postId)) {

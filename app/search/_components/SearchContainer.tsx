@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { PostWithAuthor } from '@/actions/getPostsByCategory';
 import searchIcon from '@/assets/icons/searchIcon.svg';
+import { PostWithAuthor } from '@/types/post/post';
 import Post from '@/components/post/Post';
 import { Input } from '@/components/ui/input';
 
@@ -41,7 +41,7 @@ export default function SearchContainer() {
 
   return (
     <>
-      <div className='flex flex-col items-center pt-16 mt-10 px-4 gap-6'>
+      <div className='flex flex-col items-center pt-16 mt-10 px-4 gap-6 pb-10'>
         <form onSubmit={handleSearch} className='w-full max-w-xl flex gap-3'>
           <Input
             type='text'

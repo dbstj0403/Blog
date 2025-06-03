@@ -83,7 +83,14 @@ export const authOptions: NextAuthOptions = {
           });
         }
 
-        if (existing && existing.provider !== 'GITHUB') {
+        const numericId = typeof user.id === 'string' ? Number(user.id) : user.id;
+
+        const dbUser = await prisma.user.findUnique({
+          where: { id: numericId },
+          select: { provider: true },
+        });
+
+        if (existing && dbUser?.provider !== 'GITHUB') {
           await prisma.user.update({
             where: { id: existing.id },
             data: {
@@ -122,10 +129,16 @@ export const authOptions: NextAuthOptions = {
 
   events: {
     async linkAccount({ user, account }) {
-      if (account.provider === 'github' && user.provider !== 'GITHUB') {
+      const numericId = typeof user.id === 'string' ? Number(user.id) : user.id;
+      const dbUser = await prisma.user.findUnique({
+        where: { id: numericId },
+        select: { provider: true },
+      });
+
+      if (account.provider === 'github' && dbUser?.provider !== 'GITHUB') {
         await prisma.user.update({
-          where: { id: user.id },
-          data: { provider: ProviderEnum.GITHUB }, // ← enum 값으로!
+          where: { id: numericId },
+          data: { provider: ProviderEnum.GITHUB },
         });
       }
     },

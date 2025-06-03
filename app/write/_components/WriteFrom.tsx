@@ -31,7 +31,10 @@ const WriteForm = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className='max-w-3xl mx-auto mt-20 space-y-5 px-4 sm:px-0'>
+      <form
+        onSubmit={handleSubmit}
+        className='max-w-3xl mx-auto mt-20 space-y-5 px-4 sm:px-0 pb-10'
+      >
         <p className='font-semibold text-2xl text-gray-600'>포스트 작성</p>
         <div>
           <label className='block mb-2 font-medium text-gray-800'>제목</label>

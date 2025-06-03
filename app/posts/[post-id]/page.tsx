@@ -8,7 +8,7 @@ import CategoryTab from './_components/CategoryTab';
 import PostContent from './_components/PostContent';
 
 interface PostPageProps {
-  params: { 'post-id': string };
+  params: Promise<{ 'post-id': string }>;
 }
 
 export default async function PostPage({ params }: PostPageProps) {

@@ -65,11 +65,6 @@ const ProfileContent = ({ user }: { user: any }) => {
         </div>
 
         <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-          <div className='border rounded-xl p-5 hover:shadow transition cursor-pointer'>
-            <p className='font-medium text-gray-800'>좋아요 누른 글</p>
-            <p className='text-sm text-gray-500 mt-1'>관심 있는 포스트 목록이에요.</p>
-          </div>
-
           <div
             className='border rounded-xl p-5 hover:shadow transition cursor-pointer'
             onClick={() => setShowEditModal(true)}

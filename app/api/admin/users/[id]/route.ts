@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prismaClient';
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-  const userId = Number(params.id);
+export async function DELETE(req: NextRequest, context: any) {
+  const userId = Number(context.params.id);
 
   if (isNaN(userId)) {
     return NextResponse.json({ message: '유효하지 않은 ID입니다.' }, { status: 400 });
