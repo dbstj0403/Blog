@@ -2,7 +2,7 @@ import { PostWithAuthor } from '@/types/post/post';
 import { prisma } from '@/lib/prismaClient';
 
 export async function getPostsByCategory(categoryName: string): Promise<PostWithAuthor[]> {
-  if (categoryName === 'All') {
+  if (categoryName === 'All' || categoryName === 'all') {
     return prisma.post.findMany({
       orderBy: { created_at: 'desc' },
       include: {
