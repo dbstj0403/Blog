@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Post from "./Post";
+import { useEffect, useRef, useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Post from './Post';
 
 interface Category {
   id: number;
@@ -30,12 +30,12 @@ interface PostsProps {
 }
 
 export default function Posts({ categories, postsByCategory }: PostsProps) {
-  const [selectedTab, setSelectedTab] = useState("all");
+  const [selectedTab, setSelectedTab] = useState('all');
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
   const CATEGORY_LIST = [
-    { value: "all", label: "전체" },
+    { value: 'all', label: '전체' },
     ...(categories ?? []).map((cat) => ({
       value: cat.category_name.toLowerCase(),
       label: cat.category_name,
@@ -53,48 +53,46 @@ export default function Posts({ categories, postsByCategory }: PostsProps) {
   }, [selectedTab]);
 
   return (
-    <Tabs
-      defaultValue="all"
-      className="w-full sm:pl-10"
-      onValueChange={(value) => setSelectedTab(value)}
-    >
-      <TabsList>
-        {CATEGORY_LIST.map((cat) => (
-          <TabsTrigger
-            key={cat.value}
-            ref={(el) => {
-              tabRefs.current[cat.value] = el;
+    <>
+      <Tabs
+        defaultValue='all'
+        className='w-full sm:pl-10'
+        onValueChange={(value) => setSelectedTab(value)}
+      >
+        <TabsList>
+          {CATEGORY_LIST.map((cat) => (
+            <TabsTrigger
+              key={cat.value}
+              ref={(el) => {
+                tabRefs.current[cat.value] = el;
+              }}
+              value={cat.value}
+            >
+              <p className='cursor-pointer'>{cat.label}</p>
+            </TabsTrigger>
+          ))}
+
+          <div
+            className='absolute bottom-0 h-[2px] bg-gray-900 transition-all'
+            style={{
+              left: indicatorStyle.left,
+              width: indicatorStyle.width,
             }}
-            value={cat.value}
-          >
-            <p className="cursor-pointer">{cat.label}</p>
-          </TabsTrigger>
+          />
+        </TabsList>
+
+        {CATEGORY_LIST.map((cat) => (
+          <TabsContent key={cat.value} value={cat.value} className='pt-6 sm:pl-2'>
+            <div className='space-y-8 cursor-pointer'>
+              {postsByCategory[cat.value]?.length > 0 ? (
+                postsByCategory[cat.value].map((post) => <Post key={post.id} post={post} />)
+              ) : (
+                <p className='text-gray-500 font-semibold'>해당 카테고리에 게시물이 없습니다.</p>
+              )}
+            </div>
+          </TabsContent>
         ))}
-
-        <div
-          className="absolute bottom-0 h-[2px] bg-gray-900 transition-all"
-          style={{
-            left: indicatorStyle.left,
-            width: indicatorStyle.width,
-          }}
-        />
-      </TabsList>
-
-      {CATEGORY_LIST.map((cat) => (
-        <TabsContent key={cat.value} value={cat.value} className="pt-6 sm:pl-2">
-          <div className="space-y-8 cursor-pointer">
-            {postsByCategory[cat.value]?.length > 0 ? (
-              postsByCategory[cat.value].map((post) => (
-                <Post key={post.id} post={post} />
-              ))
-            ) : (
-              <p className="text-gray-500 font-semibold">
-                해당 카테고리에 게시물이 없습니다.
-              </p>
-            )}
-          </div>
-        </TabsContent>
-      ))}
-    </Tabs>
+      </Tabs>
+    </>
   );
 }

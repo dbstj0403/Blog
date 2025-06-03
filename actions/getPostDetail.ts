@@ -1,5 +1,3 @@
-'use server';
-
 import { ReactionType } from '@prisma/client';
 import { prisma } from '@/lib/prismaClient';
 

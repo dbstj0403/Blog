@@ -14,9 +14,6 @@ export default meta;
 
 type Story = StoryObj<typeof LoginForm>;
 
-/**
- * 실제 useLogin 훅 없이 UI만 보기 위한 mock 버전
- */
 export const UIOnly: Story = {
   render: () => {
     const [email, setEmail] = useState('');

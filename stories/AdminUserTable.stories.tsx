@@ -1,4 +1,3 @@
-// components/admin/AdminUserTable.stories.tsx
 import { useState } from 'react';
 import AdminUserTable from '@/app/admin/_components/AdminUserTable';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
@@ -6,8 +5,6 @@ import Modal from '@/components/common/Modal';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-
-// 모킹을 위한 context wrapper는 이 스토리에서는 생략하고, `useSession`은 무시한다고 가정
 
 const meta: Meta<typeof AdminUserTable> = {
   title: 'Admin/AdminUserTable',
@@ -22,7 +19,6 @@ type Story = StoryObj<typeof AdminUserTable>;
 
 export const Default: Story = {
   render: () => {
-    // 가짜 컴포넌트로 UI 뼈대만 재구성
     const [searchTerm, setSearchTerm] = useState('');
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
