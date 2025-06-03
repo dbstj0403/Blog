@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   }
 
   const categoryList = category
-    .split(/\s+/)
+    .split(/[\s,]+/)
     .map((c: string) => c.trim())
     .filter((c: string) => c.length > 0);
 
