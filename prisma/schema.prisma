@@ -73,9 +73,10 @@ model Post {
   modified_at   DateTime       @updatedAt @map("modified_at")
   categories    PostCategory[]
   reactions     PostReaction[]
-  author User @relation("UserToPost", fields: [authorId], references: [id], onDelete: Cascade)
+  author        User           @relation("UserToPost", fields: [authorId], references: [id], onDelete: Cascade)
 
   @@index([authorId], map: "posts_author_id_fkey")
+  @@fulltext([title, content])
   @@map("posts")
 }
 
@@ -110,6 +111,13 @@ model PostReaction {
   @@index([postId], map: "post_reactions_post_id2_fkey")
   @@index([userId], map: "post_reactions_user_id2_fkey")
   @@map("post_reactions")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model user_stopword {
+  value String? @db.VarChar(30)
+
+  @@ignore
 }
 
 enum Provider {

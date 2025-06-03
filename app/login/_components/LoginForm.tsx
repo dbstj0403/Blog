@@ -6,18 +6,8 @@ import useLogin from '@/hooks/login/useLogin';
 import ConfirmLinkModal from '@/app/auth/confirm-link/_components/ConfirmModal';
 
 const LoginForm = () => {
-  const {
-    formValues,
-    loading,
-    error,
-    showConfirmModal,
-    confirmEmail,
-    handleChange,
-    handleCredentialsLogin,
-    handleGithubLogin,
-    handleConfirmLink,
-    handleCancelLink,
-  } = useLogin();
+  const { formValues, loading, error, handleChange, handleCredentialsLogin, handleGithubLogin } =
+    useLogin();
 
   return (
     <>
