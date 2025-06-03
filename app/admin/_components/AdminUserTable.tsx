@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { signOut, useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import searchIcon from '@/assets/icons/searchIcon.svg';
 import { useDeleteUser } from '@/hooks/admin/useDeleteUser';
@@ -45,8 +45,8 @@ export default function AdminUserTable() {
   return (
     <Card className='p-6 shadow-sm mt-6'>
       <div className='flex justify-center items-center flex-col'>
-        {!loading && <p className='text-sm text-gray-500 mb-2'>로딩 중...</p>}
-        {!error && (
+        {loading && <p className='text-sm text-gray-500 mb-2'>로딩 중...</p>}
+        {error && (
           <p className='text-sm text-red-500 mb-2'>
             {error} <button onClick={refetch}>다시 시도</button>
           </p>

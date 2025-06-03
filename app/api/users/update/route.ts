@@ -1,22 +1,18 @@
-// app/api/users/update/route.ts
-import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
-import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/prismaClient";
+import { getServerSession } from 'next-auth';
+import { NextResponse } from 'next/server';
+import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prismaClient';
 
 export async function PATCH(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
   const { name } = await req.json();
 
-  if (!name || typeof name !== "string") {
-    return NextResponse.json(
-      { message: "유효한 이름을 입력해주세요." },
-      { status: 400 },
-    );
+  if (!name || typeof name !== 'string') {
+    return NextResponse.json({ message: '유효한 이름을 입력해주세요.' }, { status: 400 });
   }
 
   const updated = await prisma.user.update({
@@ -25,7 +21,7 @@ export async function PATCH(req: Request) {
   });
 
   return NextResponse.json({
-    message: "닉네임이 수정되었습니다.",
+    message: '닉네임이 수정되었습니다.',
     user: updated,
   });
 }
