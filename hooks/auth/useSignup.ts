@@ -1,6 +1,6 @@
-import { ChangeEvent, FormEvent, useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { ChangeEvent, FormEvent, useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 interface SignupFormValues {
   name: string;
@@ -21,10 +21,10 @@ const useSignup = (): UseSignupResult => {
   const router = useRouter();
 
   const [formValues, setFormValues] = useState<SignupFormValues>({
-    name: "",
-    email: "",
-    password: "",
-    passwordConfirm: "",
+    name: '',
+    email: '',
+    password: '',
+    passwordConfirm: '',
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -43,25 +43,25 @@ const useSignup = (): UseSignupResult => {
     const { name, email, password, passwordConfirm } = formValues;
 
     if (name.length > 10) {
-      alert("닉네임은 10자 이하로 설정해 주세요.");
+      alert('닉네임은 10자 이하로 설정해 주세요.');
       setLoading(false);
       return;
     }
     if (password !== passwordConfirm) {
-      alert("비밀번호 확인과 비밀번호가 일치하지 않습니다.");
+      alert('비밀번호 확인과 비밀번호가 일치하지 않습니다.');
       setLoading(false);
       return;
     }
 
     try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
       });
 
       if (res.ok) {
-        router.push("/login");
+        router.push('/login');
         return;
       }
 
@@ -69,16 +69,16 @@ const useSignup = (): UseSignupResult => {
 
       if (res.status === 400) {
         // 이미 가입된 이메일
-        setError("이미 가입된 이메일입니다.");
+        setError('이미 가입된 이메일입니다.');
         return;
       }
 
-      if (res.status === 409 && body.code === "GITHUB_EXIST") {
+      if (res.status === 409 && body.code === 'GITHUB_EXIST') {
         const proceed = window.confirm(body.message);
         if (proceed) {
-          await signIn("github", {
-            callbackUrl: "/",
-            authorizationParams: { login: "" },
+          await signIn('github', {
+            callbackUrl: '/',
+            authorizationParams: { login: '' },
           });
         }
         setLoading(false);
@@ -86,7 +86,7 @@ const useSignup = (): UseSignupResult => {
       }
     } catch (error: any) {
       console.log(error);
-      setError("서버 요청 중 오류가 발생했습니다.");
+      setError('서버 요청 중 오류가 발생했습니다.');
     } finally {
       setLoading(false);
     }

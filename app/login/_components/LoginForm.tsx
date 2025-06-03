@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import logo from '@/assets/icons/logoIcon.png';
-import useLogin from '@/hooks/login/useLogin';
+import useLogin from '@/hooks/auth/useLogin';
 
 const LoginForm = () => {
   const { formValues, loading, error, handleChange, handleCredentialsLogin, handleGithubLogin } =
