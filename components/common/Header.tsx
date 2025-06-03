@@ -44,7 +44,13 @@ const Header = () => {
               회원가입
             </Button>
 
-            <Image src={searchIcon} alt='search' className='cursor-pointer w-4 h-4 sm:w-6 sm:h-6' />
+            <div onClick={() => router.push('/search')}>
+              <Image
+                src={searchIcon}
+                alt='search'
+                className='cursor-pointer w-4 h-4 sm:w-6 sm:h-6'
+              />
+            </div>
           </div>
         )}
 
@@ -64,7 +70,13 @@ const Header = () => {
                 <p className='text-xs sm:text-sm text=gray-500'>포스트 작성</p>
               </div>
             )}
-            <Image src={searchIcon} alt='search' className='cursor-pointer w-4 h-4 sm:w-6 sm:h-6' />
+            <div onClick={() => router.push('/search')}>
+              <Image
+                src={searchIcon}
+                alt='search'
+                className='cursor-pointer w-4 h-4 sm:w-6 sm:h-6'
+              />
+            </div>
             <Image
               src={profileIcon}
               alt='profile'

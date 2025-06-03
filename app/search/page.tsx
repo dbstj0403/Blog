@@ -1,3 +1,11 @@
+import SearchContainer from './_components/SearchContainer';
+
 const SearchPage = () => {
-  return <></>;
+  return (
+    <>
+      <SearchContainer />
+    </>
+  );
 };
+
+export default SearchPage;
