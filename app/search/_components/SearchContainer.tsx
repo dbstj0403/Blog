@@ -8,10 +8,10 @@ import Post from '@/components/post/Post';
 import { Input } from '@/components/ui/input';
 
 export default function SearchContainer() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState<string>('');
   const [results, setResults] = useState<PostWithAuthor[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [searched, setSearched] = useState<boolean>(false);
 
   const handleSearch = async (e?: React.FormEvent) => {
     e?.preventDefault();
