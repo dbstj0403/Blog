@@ -9,7 +9,8 @@ interface CategoryDetailPageProps {
 }
 
 export default async function CategoryDetailPage({ params }: CategoryDetailPageProps) {
-  const categoryName = decodeURIComponent(params['category-name']);
+  const { 'category-name': rawCategoryName } = await params;
+  const categoryName = decodeURIComponent(rawCategoryName);
 
   const { totalCount, categories } = await getCategoryCounts();
   const posts = await getPostsByCategory(categoryName);
